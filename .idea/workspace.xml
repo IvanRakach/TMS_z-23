@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="33bf08d6-3e74-4a9d-a25d-1df800875c62" name="Default Changelist" comment="- HW 1" />
+    <list default="true" id="33bf08d6-3e74-4a9d-a25d-1df800875c62" name="Default Changelist" comment="- HW 4 task 2" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -243,7 +243,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651706590026</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="- HW 4 task 2">
+      <created>1651773960901</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1651773960901</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -262,6 +269,7 @@
     <MESSAGE value="- file for all tasks has been created" />
     <MESSAGE value="- file for all tasks has been created&#10;- hw description has been added" />
     <MESSAGE value="- HW 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="- HW 1" />
+    <MESSAGE value="- HW 4 task 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="- HW 4 task 2" />
   </component>
 </project>
