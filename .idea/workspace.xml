@@ -226,15 +226,15 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.main" />
       <item itemvalue="Python.hw1_task_1" />
-      <item itemvalue="Python.hw1_task_2" />
-      <item itemvalue="Python.hw1_task_3" />
       <item itemvalue="Python.hw2_task_1" />
       <item itemvalue="Python.hw2_task_2" />
       <item itemvalue="Python.hw2_task_3" />
+      <item itemvalue="Python.hw1_task_2" />
+      <item itemvalue="Python.hw1_task_3" />
       <item itemvalue="Python.hw4_task_2" />
       <item itemvalue="Python.hw5_task_2" />
-      <item itemvalue="Python.main" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
