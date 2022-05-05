@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="33bf08d6-3e74-4a9d-a25d-1df800875c62" name="Default Changelist" comment="- HW 5 task 2" />
+    <list default="true" id="33bf08d6-3e74-4a9d-a25d-1df800875c62" name="Default Changelist" comment=" 123">
+      <change afterPath="$PROJECT_DIR$/HW_7/task_1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,9 +34,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/HW_5/task_2.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/HW_7/task_1.py" />
   </component>
-  <component name="RunManager" selected="Python.hw5_task_2">
+  <component name="RunManager" selected="Python.hw7_task_1">
     <configuration name="hw1_task_1" type="PythonConfigurationType" factoryName="Python">
       <module name="TMS_z-23" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -202,6 +205,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="hw7_task_1" type="PythonConfigurationType" factoryName="Python">
+      <module name="TMS_z-23" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Computer programming\Python_37\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/HW_7" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/HW_7/task_1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -233,6 +257,7 @@
       <item itemvalue="Python.hw1_task_3" />
       <item itemvalue="Python.hw4_task_2" />
       <item itemvalue="Python.hw5_task_2" />
+      <item itemvalue="Python.hw7_task_1" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -293,7 +318,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651775457951</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary=" 123">
+      <created>1651776143970</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1651776143970</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,6 +346,7 @@
     <MESSAGE value="- HW 1" />
     <MESSAGE value="- HW 4 task 2" />
     <MESSAGE value="- HW 5 task 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="- HW 5 task 2" />
+    <MESSAGE value=" 123" />
+    <option name="LAST_COMMIT_MESSAGE" value=" 123" />
   </component>
 </project>
