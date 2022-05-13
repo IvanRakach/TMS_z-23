@@ -1,0 +1,107 @@
+CREATE TABLE authors
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE books
+(
+    id SERIAL PRIMARY KEY NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    publ_year INTEGER NOT NULL,
+    authors_id INTEGER REFERENCES authors(id)
+);
+
+CREATE TABLE result_authors_books
+(
+	authors_id integer references authors(id),
+	books_id integer references books(id)
+);
+
+
+select * from authors;
+select * from books;
+select * from result_authors_books;
+
+INSERT INTO authors(first_name, last_name) VALUES ('Лев', 'Толстой');
+INSERT INTO authors(first_name, last_name) VALUES ('Джордж', 'Оруэлл');
+INSERT INTO authors(first_name, last_name) VALUES ('Теодор', 'Драйзер');
+INSERT INTO authors(first_name, last_name) VALUES ('Илья', 'Ильиф');
+INSERT INTO authors(first_name, last_name) VALUES ('Евгений', 'Петров');
+INSERT INTO authors(first_name, last_name) VALUES ('Нил', 'Гейман');
+INSERT INTO authors(first_name, last_name) VALUES ('Терри', 'Пратчетт');
+
+select * from authors;
+
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Война и мир', 1869, 1);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('«1984»', 1949, 2);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Финансист', 1912, 3);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Одноэтажная Америка', 1937, 4);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Одноэтажная Америка', 1937, 5);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Добрые предзнаменования', 1990, 6);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Добрые предзнаменования', 1990, 7);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Американская трагедия', 1925, 3);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Титан', 1914, 3);
+INSERT INTO books(name, publ_year, authors_id) VALUES ('Плоский мир', 1983, 7);
+
+select * from books;
+
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (1, 1);  /*Толстой/Война и мир*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (2, 2);  /*Оруэлл/«1984»*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (3, 3);  /*Драйзер/Финансист*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (4, 4);  /*Ильиф/Одноэтажная Америка*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (5, 5);  /*Петров/Одноэтажная Америка*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (6, 6);  /*Гейман/Добрые предзнаменования*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (7, 7);  /*Пратчетт/Добрые предзнаменования*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (3, 8);  /*Драйзер/Американская трагедия*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (3, 9);  /*Драйзер/Титан*/
+INSERT INTO result_authors_books (authors_id, books_id) VALUES (7, 10);  /*Пратчетт/Плоский мир*/
+
+select * from result_authors_books;
+
+/* Все виды JOIN */
+
+/* INNER JOIN */
+/*SELECT *
+FROM authors 
+INNER JOIN books
+ON authors.id = books.authors_id;*/
+
+/* LEFT OUTER JOIN */
+/*SELECT *
+FROM authors
+LEFT OUTER JOIN books
+ON authors.id = books.authors_id;*/
+
+/* RIGHT OUTER JOIN */
+/*SELECT *
+FROM books
+RIGHT OUTER JOIN authors
+ON books.authors_id = authors.id;*/
+
+/* FULL OUTER JOIN */
+/*SELECT *
+FROM authors
+FULL OUTER JOIN books
+ON authors.id = books.authors_id;*/
+
+
+/* Вывожу информацию об авторе, который имеет больше всего книг и 
+количество книг, написанных этим автором:*/
+SELECT first_name, last_name, COUNT(books.authors_id) AS numbers_of_books
+FROM authors
+LEFT OUTER JOIN books 
+ON authors.id=books.authors_id 
+GROUP BY authors.id
+ORDER BY COUNT(books.authors_id) DESC
+LIMIT 1;
+/* HAVING COUNT(books.authors_id) > 1; */ 
+
+
+
+/* Сделать подзапрос с использованием функции */
+SELECT * 
+FROM books
+WHERE publ_year = (SELECT MAX(publ_year)
+				  FROM BOOKS);
