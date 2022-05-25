@@ -6,41 +6,43 @@
 
 {% block main_content %}
 
-<div class="catalog_block">
+    <div class="catalog_block">
 
-    <h3 class="catalog_block_name">Каталог товаров</h3>
+        <h3 class="catalog_block_name">Каталог товаров</h3>
 
+        <div class="catalog_block_elements">
+        {% for book in books_query %}
+            <div class="book_card">
 
-    {% for book in books_query %}
-        <article class="book_card">
+    <!--            <div class="">-->
 
-<!--            <div class="">-->
+                    {% if book.book_image %}
+                        <div>
+                            <img class="img_param" src="{{ book.book_image.url }}" alt="foto">
+                        </div>
+                    {% else %}
+                        <div>
+                            <span>Фото не загружено</span>
+                        </div>
+                    {% endif %}
+                    <br>
 
-                {% if book.book_image %}
                     <div>
-                        <img class="img_param" src="{{ book.book_image.url }}" alt="foto">
+                        <p><small>Название книги: {{ book.book_name }}</small></p>
+                        <p><small>Год выпуска: {{ book.publ_year }}</small></p>
+                        <p><small>Цена: {{ book.book_price_BYN }} BYN</small></p>
+
+                        <div class="book_card_buttons">
+                            <button>Подробнее</button>
+                            <button>Купить</button>
+                        </div>
                     </div>
-                {% else %}
-                    <div>
-                        <span>Фото не загружено</span>
-                    </div>
-                {% endif %}
-                <br>
 
-                <div>
-                    <p><small>Название книги: {{ book.book_name }}</small></p>
-                    <p><small>Год выпуска: {{ book.publ_year }}</small></p>
-                    <p><small>Цена: {{ book.book_price_BYN }} BYN</small></p>
+    <!--            </div>-->
 
-                    <div class="book_card_buttons">
-                        <button>Подробнее</button>
-                        <button>Купить</button>
-                    </div>
-                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
 
-<!--            </div>-->
-
-        </article>
-    {% endfor %}
-</div>
 {% endblock %}
