@@ -22,7 +22,7 @@
                         <label for="sales_image_field">Фото: </label>
                         <p id="sales_image_field">{{ adding_sales_form.image_field }}</p>
 
-                        <button type="submit">Предложить акцию</button>
+                        <button type="submit">Добавить акцию</button>
 
                     </form>
                 {% else %}
@@ -30,16 +30,18 @@
                 {% endif %}
             </div>
         </div>
+
+        <hr>
+
         <div class="block_for_printing_sales_wrapper">
 
             {% for sale in sales_list %}
                 <div class="sales_card">
-                    <p>Название акции: {{ sales_list.header }}</p>
-                    <p>Текст акции: {{ sales_list.text }}</p>
-                    {% if sales_list.image_field %}
-                        <p>Текст акции: {{ sales_list.image_field }}</p>
+                    <p>Название акции: {{ sale.header }}</p>
+                    <p>Текст акции: {{ sale.text }}</p>
+                    {% if sale.image_field %}
+                        <img class="img_param" src="{{ sale.image_field.url }}" alt="foto">
                     {% endif %}
-
                 </div>
             {% endfor %}
 
