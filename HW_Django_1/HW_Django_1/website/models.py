@@ -34,3 +34,21 @@ class Books(models.Model):
         verbose_name = '''Таблица: Книга'''
         verbose_name_plural = '''Таблица: Книги'''
         ordering = ['book_name', 'book_price_BYN', 'authors_fk', '-time_create']
+
+
+class Sales(models.Model):
+    header = models.CharField('Наименование акции', max_length=150)
+    text = models.TextField('Текст акции',)
+    image_field = models.ImageField(upload_to="photos/%Y/%m/%d", verbose_name='Фотография ', )
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+    
+    def __str__(self):
+        return self.header
+    
+    class Meta:
+        verbose_name = "Таблица: Акция"
+        verbose_name_plural = "Таблица: Акции"
+        ordering = ['header', 'text', '-time_create', 'time_update']
+
+

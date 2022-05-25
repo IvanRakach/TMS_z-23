@@ -12,25 +12,47 @@
 <body>
 
     <header class="clearfix">
-        <section>
-            <div>
-                <h4>header</h4>
+        <div class="header_blocks_wrapper">
+            <article class="header_block_1">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'website/img/e-book-logo-1.jpg' %}" alt="logo-1" id="logo-1"
+                    style="width: 180px; height: 120px;">
+                    </a>
+            </article>
 
-                <ul>Навигация по сайту
-                    <li>
-                        <a href="{% url 'home' %}">Главная</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'about-us' %}">О нас</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'feedback' %}">Обратная связь / Отзывы</a>
-                    </li>
-                </ul>
+            <article class="header_block_2">
+                    <ul>
+                        <li>
+                            <a href="{% url 'home' %}">Главная</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'about-us' %}">О нас</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'sales' %}">Акции</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'feedback' %}">Обратная связь / Отзывы</a>
+                        </li>
+                        <li>
+                            {% for number in header_phones %}
+                                <a href="tel:{{ number }}">{{ number }}</a>
+                            {% endfor %}
+                        </li>
+                    </ul>
+            </article>
 
-            </div>
-            <hr>
-        </section>
+            <article class="header_block_3">
+                    {% if request.user.is_authenticated %}
+                        <span>{{ user.username }} | <a href="{% url 'logout' %}">Выйти</a></span>
+    <!--                    <p><a href="{'%' url 'private_room_home' '%'}">Личный кабинет</a></p>-->
+                    {% else %}
+                        <span><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></span>
+                    {% endif %}
+
+            </article>
+        </div>
+
     </header>
 
     <main>

@@ -1,0 +1,49 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main_content %}
+
+    <div class="page_wrapper">
+        <h1 class="">Акции</h1>
+
+        <div class="block_for_adding_sales_wrapper">
+            <div class="block_for_form">
+                {% if request.user.is_authenticated %}
+                    <form action="{% url 'sales' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <label for="sales_header">Название акции: </label>
+                        <p id="sales_header">{{ adding_sales_form.header }}</p>
+                        <label for="sales_text">Текст акции: </label>
+                        <p id="sales_text">{{ adding_sales_form.text }}</p>
+                        <label for="sales_image_field">Фото: </label>
+                        <p id="sales_image_field">{{ adding_sales_form.image_field }}</p>
+
+                        <button type="submit">Предложить акцию</button>
+
+                    </form>
+                {% else %}
+                    <p>Предложить акцию может только зарегистрированный пользователь</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="block_for_printing_sales_wrapper">
+
+            {% for sale in sales_list %}
+                <div class="sales_card">
+                    <p>Название акции: {{ sales_list.header }}</p>
+                    <p>Текст акции: {{ sales_list.text }}</p>
+                    {% if sales_list.image_field %}
+                        <p>Текст акции: {{ sales_list.image_field }}</p>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+{% endblock %}

@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33bf08d6-3e74-4a9d-a25d-1df800875c62" name="Default Changelist" comment="HW_10">
+      <change afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/templates/website/sales.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/static/website/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/static/website/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/templates/website/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/templates/website/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/templates/website/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/templates/website/layout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/HW_Django_1/HW_Django_1/website/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +26,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -31,9 +40,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../pythonProject/avalon_auto" />
   </component>
   <component name="RunManager" selected="Python.hw5_task_2">
     <configuration name="hw1_task_1" type="PythonConfigurationType" factoryName="Python">
@@ -226,15 +236,15 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.main" />
       <item itemvalue="Python.hw1_task_1" />
+      <item itemvalue="Python.hw1_task_2" />
+      <item itemvalue="Python.hw1_task_3" />
       <item itemvalue="Python.hw2_task_1" />
       <item itemvalue="Python.hw2_task_2" />
       <item itemvalue="Python.hw2_task_3" />
-      <item itemvalue="Python.hw1_task_2" />
-      <item itemvalue="Python.hw1_task_3" />
       <item itemvalue="Python.hw4_task_2" />
       <item itemvalue="Python.hw5_task_2" />
+      <item itemvalue="Python.main" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

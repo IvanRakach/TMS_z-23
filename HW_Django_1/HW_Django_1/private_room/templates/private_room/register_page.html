@@ -1,0 +1,31 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_content %}
+<br>
+<h3 class="">Регистрация пользователей</h3>
+
+<div class="">
+    <div class="">
+        <form method="post">
+            {% csrf_token %}
+
+            {% for f in user_form %}
+              <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: </label>{{ f }}</p>
+
+              <div class="form-errors">{{ f.errors }}</div>
+            {% endfor %}
+
+        <small>Мы не распространяем информацию третьим лицам.</small>
+
+        <div>
+            <button type="submit" class="reg_btn">Регистрация</button>
+        </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

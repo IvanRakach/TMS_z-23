@@ -2,32 +2,116 @@
 html{
     background-color: #F6F5F4;
 }
-header{
-    width: 100%;
-}
-main{
-
-}
-footer{
-    width: 100%;
-}
 .clearfix{
     content: "";
     display: table;
     margin-bottom: 10px;
 }
-
-.wrapper_book_card{
+/* ********************************************************************* */
+/* **************************** START HEADER *************************** */
+/* ********************************************************************* */
+header{
     width: 100%;
 }
-.book_card {
-    border: 1px solid black;
-    width: 30%;
+ul {
+    margin: 0; /* Обнуляем значение отступов */
+    padding: 2px; /* Значение полей */
+}
+ul li {
+    display: inline; /* Отображать как строчный элемент */
+    margin-right: 5px; /* Отступ слева */
+    /* border: 1px solid #000; /* Рамка вокруг текста */
+    padding: 3px; /* Поля вокруг текста */
+
+}
+.header_blocks_wrapper{
+    display: block;
+}
+.header_blocks_wrapper article{
+    /*width: 33%;*/
+    display: block;
     float: left;
-    margin-left: 3%;
+}
+.header_block_1{
+    width: 17%;
+    margin-left: auto;
+}
+.header_block_2{
+    width: 70%;
+    margin-left: auto;
+}
+.header_blocks_wrapper article ul{
+    margin-left: auto;
+}
+.header_blocks_wrapper article ul li a{
+    text-decoration: none;
+}
+header_blocks_wrapper article ul li a:hover {
+    text-decoration: red;
+}
+.header_blocks_wrapper article span{
+    margin-left: auto;
+}
+
+/* ********************************************************************* */
+/* ***************************** END HEADER **************************** */
+/* ********************************************************************* */
+
+/* ********************************************************************* */
+/* ***************************** START MAIN **************************** */
+/* ********************************************************************* */
+main{
+    width: 100%;
+}
+.catalog_block{
+    display: block;
+    padding-left: 25%;
+    width: 100%;
+    /*display: flex;*/
+    /*justify-content: center;*/
+}
+.catalog_block_name{
+    margin-left: 22%;
+
+}
+.book_card {
+    max-width: 25%;
+    height: 380px;
+    max-height: 380px;
+    border: 1px solid black;
+    float: left;
+    margin-left: 5%;
 }
 
 .img_param{
-    width: 100%;
-    height: 310px;
+    width: 100%; /* max - 85% */
+    height: 270px;
 }
+.book_card div p{
+    margin-left: 5%;
+    margin-top: -8%;
+}
+.book_card_buttons{
+    width: 90%;
+    margin: 0 auto;
+    margin-left: 5%;
+    margin-top: -5%;
+    float: left;
+}
+
+/* ********************************************************************* */
+/* ****************************** END MAIN ***************************** */
+/* ********************************************************************* */
+
+/* ********************************************************************* */
+/* **************************** START FOOTER *************************** */
+/* ********************************************************************* */
+footer{
+    width: 100%;
+}
+
+
+
+/* ********************************************************************* */
+/* ***************************** END FOOTER **************************** */
+/* ********************************************************************* */

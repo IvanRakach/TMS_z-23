@@ -1,0 +1,33 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block main_content %}
+
+    <h3 class="login_anchor">Войдите в личный кабинет</h3>
+
+    <div class="login_block_wrapper">
+        <div class="login_block">
+            <form method="post">
+                {% csrf_token %}
+                <!--  отображение общих ошибок при авторизации пользователей -->
+                <!--  ошибки не с заполнением полей, а неверный пароль, например: -->
+                <!--  такие ошибки будут показываться благодаря коллекции "non_field_errors" -->
+                <div class="form-error">{{ form.non_field_errors }}</div>
+                {% for f in user_login_form %}
+                  <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: </label>{{ f }}</p>
+                  <div class="form-errors">{{ f.errors }}</div>
+                {% endfor %}
+
+                <div>
+                    <button type="submit" class="log_btn">Войти</button>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+    <br>
+
+{% endblock %}

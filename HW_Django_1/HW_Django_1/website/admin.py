@@ -62,3 +62,39 @@ class BooksAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Books, BooksAdmin)
+
+
+class SalesAdmin(admin.ModelAdmin):
+    # список полей, которые мы хотим видеть в нашей админ панели
+    list_display = \
+        (
+            'id',
+            'header',
+            'text',
+            'image_field',
+            'time_create',
+            'time_update',
+        )
+    # те поля, на которые мы можем кликнуть и перейти на соответствующий отзыв
+    list_display_links = \
+        (
+            'id',
+            'header',
+            'text',
+            'image_field',
+        )
+    # те поля, по которым мы можем производить поиск информации
+    search_fields = \
+        (
+            'header',
+            'text',
+        )
+    # те поля, по которым мы можем фильтровать список статей
+    list_filter = \
+        (
+            'time_create', 
+            'time_update',
+        )
+
+
+admin.site.register(Sales, SalesAdmin)

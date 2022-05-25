@@ -23,6 +23,7 @@ urlpatterns = \
     [
         path('admin/', admin.site.urls),
         path('', include('website.urls')),
+        path('private_room/', include('private_room.urls'))
     ]
 
 if settings.DEBUG:
