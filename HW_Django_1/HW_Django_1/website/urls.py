@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import *
+
 
 urlpatterns = \
     [
@@ -8,4 +8,6 @@ urlpatterns = \
         path('about-us', views.show_about_us, name="about-us"),
         path('feedback', views.show_feedback, name="feedback"),
         path('sales', views.add_new_sale, name="sales"),
+        path('<int:sales_id>/update', views.update_sales, name='sales-update'),
+        path('all-sales', views.show_all_sales, name="all-sales"),
     ]

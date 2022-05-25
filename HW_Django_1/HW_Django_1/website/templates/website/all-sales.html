@@ -1,0 +1,35 @@
+{% extends 'website/layout.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block main_content %}
+
+    <div class="block_for_printing_sales_wrapper">
+
+        <h1 style="text-align: center">Акции</h1>
+
+        {% if sales_list %}
+            <div class="sale_block">
+                {% for sale in sales_list %}
+                    <div class="sales_card">
+                        <div>
+                            <span>{{ sale.time_create }}</span>
+                        </div>
+                        <p>Название акции: {{ sale.header }}</p>
+                        <p>Текст акции: {{ sale.text }}</p>
+                        {% if sale.image_field %}
+                            <img class="img_sales" src="{{ sale.image_field.url }}" alt="foto">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+        {% else %}
+              <p style="text-align: center">Акций нет</p>
+        {% endif %}
+
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -99,6 +99,35 @@ main{
     float: left;
 }
 
+
+/* Добавление акций и их вывод */
+.page_wrapper{
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+}
+.block_for_form{
+    justify-content: center;
+}
+
+.add_sale_field{
+    width: 250px;
+}
+.block_for_printing_sales_wrapper{
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+}
+.sale_block{
+    max-width: 70%;
+    height: 380px;
+    max-height: 380px;
+    border: 1px solid black;
+
+    margin-left: 5%;
+}
+
+
 /* ********************************************************************* */
 /* ****************************** END MAIN ***************************** */
 /* ********************************************************************* */

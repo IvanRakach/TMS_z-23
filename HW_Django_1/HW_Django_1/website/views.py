@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import AddNewSaleForm
 from .models import *
@@ -34,11 +34,14 @@ def show_feedback(request):
     return render(request, 'website/feedback.html', context=param_for_render)
 
 
-def show_sales(request):
+def show_all_sales(request):
+    sales_list = Sales.objects.order_by('-time_create')
+
     param_for_render = {
-        'title': 'Обратная связь',
+        'title': 'Все акции',
+        'sales_list': sales_list,
     }
-    return render(request, 'website/sales.html', context=param_for_render)
+    return render(request, 'website/all-sales.html', context=param_for_render)
 
 
 def add_new_sale(request):
@@ -47,15 +50,30 @@ def add_new_sale(request):
         adding_sales_form = AddNewSaleForm(request.POST, request.FILES)  # в этом объекте находятся данные, которые мы получили от пользователя из формы
         if adding_sales_form.is_valid():  # проверяем эти данные (пользователя) на корректность заполнения
             adding_sales_form.save()  # сохраняем данные, если они корректно заполнены
-            return redirect('home')
+            return redirect('all-sales')
     else:
         adding_sales_form = AddNewSaleForm()
 
-    sales_list = Sales.objects.order_by('-time_create')
-
     param_for_render = {
+        'title': 'Добавить новую акцию',
         'adding_sales_form': adding_sales_form,
         'header_phones': header_phones,
-        'sales_list': sales_list,
+    }
+    return render(request, 'website/sales.html', context=param_for_render)
+
+
+def update_sales(request, sales_id):
+    get_sales = get_object_or_404(AddNewSaleForm, pk=sales_id)
+    if request.method == 'POST':
+        adding_sales_form = AddNewSaleForm(request.POST, request.FILES, instance=get_sales)
+        if adding_sales_form.is_valid():
+            adding_sales_form.save()
+            return redirect('all-sales')
+
+    param_for_render = {
+        'header_phones': header_phones,
+        'get_sales': get_sales,
+        'update_sale': True,
+        'adding_sales_form': AddNewSaleForm(instance=get_sales),
     }
     return render(request, 'website/sales.html', context=param_for_render)

@@ -7,45 +7,32 @@
 {% block main_content %}
 
     <div class="page_wrapper">
-        <h1 class="">Акции</h1>
+        <h1 style="text-align: center">Добавить новую акцию</h1>
 
-        <div class="block_for_adding_sales_wrapper">
-            <div class="block_for_form">
-                {% if request.user.is_authenticated %}
-                    <form action="{% url 'sales' %}" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
 
-                        <label for="sales_header">Название акции: </label>
-                        <p id="sales_header">{{ adding_sales_form.header }}</p>
-                        <label for="sales_text">Текст акции: </label>
-                        <p id="sales_text">{{ adding_sales_form.text }}</p>
-                        <label for="sales_image_field">Фото: </label>
-                        <p id="sales_image_field">{{ adding_sales_form.image_field }}</p>
+            <div class="block_for_adding_sales_wrapper">
+                <div class="block_for_form">
 
-                        <button type="submit">Добавить акцию</button>
+                    {% if request.user.is_authenticated %}
+                        <form action="{% url 'sales' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
 
-                    </form>
-                {% else %}
-                    <p>Предложить акцию может только зарегистрированный пользователь</p>
-                {% endif %}
-            </div>
-        </div>
+                            <label for="sales_header">Название акции: </label>
+                            <p class="add_sale_field" id="sales_header">{{ adding_sales_form.header }}</p>
+                            <label for="sales_text">Текст акции: </label>
+                            <p class="add_sale_field" id="sales_text">{{ adding_sales_form.text }}</p>
+                            <label for="sales_image_field">Фото: </label>
+                            <p class="add_sale_field" id="sales_image_field">{{ adding_sales_form.image_field }}</p>
 
-        <hr>
+                            <button type="submit">Добавить акцию</button>
 
-        <div class="block_for_printing_sales_wrapper">
-
-            {% for sale in sales_list %}
-                <div class="sales_card">
-                    <p>Название акции: {{ sale.header }}</p>
-                    <p>Текст акции: {{ sale.text }}</p>
-                    {% if sale.image_field %}
-                        <img class="img_param" src="{{ sale.image_field.url }}" alt="foto">
+                        </form>
+                    {% else %}
+                        <p>Предложить акцию может только зарегистрированный пользователь</p>
                     {% endif %}
                 </div>
-            {% endfor %}
+            </div>
 
 
-        </div>
     </div>
 {% endblock %}
