@@ -54,5 +54,3 @@ class Sales(models.Model):
         verbose_name = "Таблица: Акция"
         verbose_name_plural = "Таблица: Акции"
         ordering = ['header', 'text', '-time_create', 'time_update']
-
-
