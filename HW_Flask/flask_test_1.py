@@ -1,8 +1,11 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 
 app = Flask(__name__)  # __name__ - имя нашего приложения / файла
 
-menu = ["Установка", "Первое приложение", "Обратная связь"]
+menu = [
+    {"name": "Установка", "url": "install-flask"},
+    {"name": "Первое приложение", "url": "first-app"},
+    {"name": "Обратная связь", "url": "contact"}]
 
 
 @app.route("/index")
@@ -19,8 +22,11 @@ def about():
     return render_template("about.html", title="О сайте", menu=menu)
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
+        print(request.form)  # так можем брать данные из формы
+        print(f"username: {request.form['username']}")
     return render_template("contact.html", title="contact", menu=menu)
 
 
@@ -40,8 +46,8 @@ def profile(username):
 # когда мы запускаем лок веб сервер name принимает значение main
 # на удаленном сервере main писать не надо, надо писать имя файла
 
-# if __name__ == "__main__":
-#     app.run(debug=True)  # запуск локального вебсервера
+if __name__ == "__main__":
+    app.run(debug=True)  # запуск локального вебсервера
 
 
 
@@ -54,7 +60,7 @@ def profile(username):
 # вместо них пишем:
 # with - менеджер контекста
 # test_request_context - создаем тестовый контекст запроса
-with app.test_request_context():
-    print(url_for("index"))
-    print(url_for("about"))
-    print(url_for("profile", username="123abcd"))
+# with app.test_request_context():
+#     print(url_for("index"))
+#     print(url_for("about"))
+#     print(url_for("profile", username="123abcd"))

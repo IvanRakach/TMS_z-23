@@ -2,5 +2,11 @@
 
 {% block content %}
     {{ super() }}
-    <p>Содержимое "страницы контакты"</p>
+    <form action="/contact" method="post">
+        <p><label>Имя: </label><input type="text" name="username" required></p>
+        <p><label>Email: </label><input type="text" name="email" required></p>
+        <p><label>Сообщение:</label></p>
+        <p><textarea name="message" rows=7 cols=40></textarea></p>
+        <p><input type="submit" value="Отправить"></p>
+    </form>
 {% endblock %}
