@@ -1,6 +1,8 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, flash
 
 app = Flask(__name__)  # __name__ - имя нашего приложения / файла
+
+app.config["SECRET_KEY"] = "KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#"
 
 menu = [
     {"name": "Установка", "url": "install-flask"},
@@ -25,6 +27,10 @@ def about():
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
+        if len(request.form["username"]) > 2:
+            flash("Сообщение отправлено", category="success")
+        else:
+            flash("Ошибка отправки", category="error")
         print(request.form)  # так можем брать данные из формы
         print(f"username: {request.form['username']}")
     return render_template("contact.html", title="contact", menu=menu)
@@ -43,6 +49,15 @@ def profile(username):
     return f"Пользователь: {username}"
 
 
+@app.errorhandler(404)
+def pagenotfound(error):
+    return render_template('page404.html', title="Страница не найдена")
+# если у нас есть необходимость в том, чтобы сервер возвращал не код "200"
+# который мы получаем, если наш обработчик (handler) обработал ошибку "404",
+# а код 404, то нам нужно просто через запятую указать "404"
+# return render_template('page404.html', title="Страница не найдена"), 404
+
+# -------------------------------------------------------------------------
 # когда мы запускаем лок веб сервер name принимает значение main
 # на удаленном сервере main писать не надо, надо писать имя файла
 
