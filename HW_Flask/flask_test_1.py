@@ -4,6 +4,8 @@ import sqlite3  # система упр БД
 from flask import Flask, render_template, url_for, request, flash, abort, session, g
 from werkzeug.utils import redirect
 
+from FDataBase import FDataBase
+
 DATABASE = '/tmp/flsite.db'  # путь к нашей БД
 DEBUG = True
 SECRET_KEY = 'KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#'
@@ -50,6 +52,7 @@ def create_db():
     # и затем закрыть соединение:
     db.close()
 
+
 def get_db():
     """
     Соединение с БД, если оно еще не установлено
@@ -83,13 +86,43 @@ def close_db(error):  # error - передаем этот параметр и в
 #
 
 
-@app.route("/index")
 @app.route("/")
 def index():
     # index - имя функции; вызывается в контексте обработчика запроса - функции запроса (def index)
     print(url_for("index"))
     db = get_db()
-    return render_template("index.html", menu=[])
+    dbase = FDataBase(db)
+    return render_template("index.html", menu=dbase.get_menu(), posts=dbase.get_posts_anonce())
+
+
+@app.route("/add-post", methods=['GET', 'POST'])
+def add_post():
+    print(url_for("add_post"))
+    db = get_db()
+    dbase = FDataBase(db)
+
+    if request.method == "POST":  # если данные пришли по пост запросу
+        if len(request.form['name']) > 4 and len(request.form['post']) > 10:
+            res = dbase.add_post_in_db(request.form['name'], request.form['post'])
+            if not res:
+                flash('Ошибка добавления статьи', category='error')
+            else:
+                flash('Статья успешно добавлена', category='success')
+        else:
+            flash('Ошибка добавления статьи', category='error')
+
+    return render_template("add_post.html", title="Добавить статью", menu=dbase.get_menu())
+
+
+@app.route("/post/<int:id_post>")
+def show_post(id_post):
+    db = get_db()
+    dbase = FDataBase(db)
+    title, post = dbase.get_post_from_db(id_post)
+    if not title:
+        abort(404)
+
+    return render_template('post.html', menu=dbase.get_menu(), title=title, post=post)
 
 
 @app.route("/about")
@@ -123,8 +156,6 @@ def profile(username):
     if 'userLogged' not in session or session['userLogged'] != username:
         abort(401)
     return f"Профиль пользователя: {username}"
-
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -163,8 +194,6 @@ def pagenotfound(error):  # error - передается ошибка серве
 
 if __name__ == "__main__":
     app.run(debug=True)  # запуск локального вебсервера
-
-
 
 # Если нам необходимо осуществить проверку функции url_for для разных обработчиков
 # Фреймворк Flask позволяет нам это сделать искусственно БЕЗ АКТИВАЦИИ ВЕБ СЕРВЕРА:
