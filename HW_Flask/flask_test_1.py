@@ -1,13 +1,86 @@
-from flask import Flask, render_template, url_for, request, flash
+import os  # работа с файловой системой
+import sqlite3  # система упр БД
+
+from flask import Flask, render_template, url_for, request, flash, abort, session, g
+from werkzeug.utils import redirect
+
+DATABASE = '/tmp/flsite.db'  # путь к нашей БД
+DEBUG = True
+SECRET_KEY = 'KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#'
 
 app = Flask(__name__)  # __name__ - имя нашего приложения / файла
-
-app.config["SECRET_KEY"] = "KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#"
+# app.config["SECRET_KEY"] = "KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#"
+# загружаем конфигурацию (переменные большими буквами) из нашего приложения:
+# директива __name__, которая будет ссылаться на этот текущий модуль
+# config - определяет начальную конфигурацию нашего приложения
+app.config.from_object(__name__)
+# далее мы переопределим путь к БД нашего приложения
+app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
 
 menu = [
     {"name": "Установка", "url": "install-flask"},
     {"name": "Первое приложение", "url": "first-app"},
-    {"name": "Обратная связь", "url": "contact"}]
+    {"name": "Обратная связь", "url": "contact"},
+    {"name": "О нас", "url": "about"},
+    {"name": "Логин", "url": "login"}]
+
+def connect_db():
+    """функция для установления соединения с БД"""
+    conn = sqlite3.connect(app.config['DATABASE'])
+    conn.row_factory = sqlite3.Row  # записи будут представлены не в виде кортежа, а в виде словаря
+    return conn  # возврат установленного соединения
+
+
+def create_db():
+    """
+    это функция создает БД без запуска веб сервера
+    это вспомогательная функция для создания таблиц в БД
+    """
+    # вызываем функцию, которую объявили выше для установления соединения с БД:
+    db = connect_db()
+    # далее используем менеджер контекста (with), для запуска файла на чтение (mode='r') с SQL скриптами (sq_db.sql)
+    # по созданию таблиц:
+    with app.open_resource('sq_db.sql', mode='r') as f:
+        # Далее мы обращаемся к классу "cursor",
+        # т.е. мы берем из установленного соединения с БД ("db = connect_db()") класс "cursor"
+        # и через этот класс выполняем след. метод "executescript(f.read())":
+        db.cursor().executescript(f.read())  # т.е. это команда запускает скрипты из читаемого файла
+    # Затем мы должны записать все изменения в БД:
+    db.commit()
+    # и затем закрыть соединение:
+    db.close()
+
+def get_db():
+    """
+    Соединение с БД, если оно еще не установлено
+    Когда приходит запрос - создается контекст приложения и в этом контексте приложения
+    есть такая глобальная переменная "g", в которую мы можем 
+    записывать любую пользовательскую информацию.
+    
+    В нашем случае мы запишем след информацию - установление соединения с БД
+    """
+    # делам это след обр-м:
+    # проверям: существует ли у объекта "g" свойство "link_db",
+    # т.е. если существует, то соединение с БД уже было установлено и
+    # нам нужно его просто возвратить: >>> return g.link_db
+    # иначе вызываем прописанную нам функцию для установки соединения с БД
+    if not hasattr(g, 'link_db'):
+        g.link_db = connect_db()
+        return g.link_db
+
+# НО КАК ЗАКРЫТЬ/РАЗОРВАТЬ СОЕДИНЕНИЯ ПОСЛЕ ТОГО КАК ЗАПРОС ПОЛЬЗОВАТЕЛЯ ЗАВЕРШЕН?
+# для этого во фласк есть след декоратор: @app.teardown_appcontext
+# он срабатывает тогда, когда происходит уничтожение контекста приложения
+# А ЭТО ОБЫЧНО ПРОИСХОДИТ  в момент завершения обработки запроса
+# в итоге: пропишем следующий обработчик для завершения соединения с базой данных:
+@app.teardown_appcontext
+def close_db(error):  # error - передаем этот параметр и в нем это будет фигурировать
+    """Закрываем соединение с БД, если оно было установлено"""
+    if hasattr(g, 'link_db'):
+        g.link_db.close()
+#
+#
+#
 
 
 @app.route("/index")
@@ -15,7 +88,8 @@ menu = [
 def index():
     # index - имя функции; вызывается в контексте обработчика запроса - функции запроса (def index)
     print(url_for("index"))
-    return render_template("index.html", menu=menu)
+    db = get_db()
+    return render_template("index.html", menu=[])
 
 
 @app.route("/about")
@@ -36,7 +110,6 @@ def contact():
     return render_template("contact.html", title="contact", menu=menu)
 
 
-@app.route("/profile/<username>")
 # path: - это конвертер и он говорит о том, что все,
 # что указано после "profile" нужно поместить в переменную "username"
 # int: - это конвертер; должны присутствовать только цифры
@@ -45,12 +118,38 @@ def contact():
 # @app.route("/profile/<int:username>/<path>")
 # def profile(username, path):
 #     return f"Пользователь: {username}, {path}"
+@app.route("/profile/<username>")
 def profile(username):
-    return f"Пользователь: {username}"
+    if 'userLogged' not in session or session['userLogged'] != username:
+        abort(401)
+    return f"Профиль пользователя: {username}"
+
+
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if 'userLogged' in session:
+        print(url_for("login"))
+        print(url_for("profile"))
+        print('1')
+        return redirect(url_for("profile", username=session["userLogged"]))
+    elif request.method == ["POST"] and request.form["username"] == "ivan" and request.form["psw"] == 'qqq':
+        print(url_for("login"))
+        print(url_for("profile"))
+        print('2')
+        session['userLogged'] = request.form["username"]
+        return redirect(url_for("profile", username=session["userLogged"]))
+    # if request.method == ["POST"]:
+    #     print(f"{request.form['username']}")
+    #     print(f"{request.form['psw']}")
+    #     return redirect(url_for("profile"))
+    print('/login')
+    return render_template("login.html", title="Авторизация", menu=menu)
 
 
 @app.errorhandler(404)
-def pagenotfound(error):
+def pagenotfound(error):  # error - передается ошибка сервера
     return render_template('page404.html', title="Страница не найдена")
 # если у нас есть необходимость в том, чтобы сервер возвращал не код "200"
 # который мы получаем, если наш обработчик (handler) обработал ошибку "404",
@@ -60,6 +159,7 @@ def pagenotfound(error):
 # -------------------------------------------------------------------------
 # когда мы запускаем лок веб сервер name принимает значение main
 # на удаленном сервере main писать не надо, надо писать имя файла
+
 
 if __name__ == "__main__":
     app.run(debug=True)  # запуск локального вебсервера
