@@ -20,12 +20,18 @@ class FDataBase:
         return []
 
     # пропишем метод в классе, который будет добавлять данные в таблицу post
-    def add_post_in_db(self, title, text):
+    def add_post_in_db(self, title, text, url):
         try:
+            self.__cur.execute(f"SELECT COUNT() as 'count' FROM posts WHERE url LIKE '{url}'")
+            res = self.__cur.fetchone()
+            if res['count'] > 0:
+                print("Статья с таким url уже существует")
+                return False
+
             # для добавления поста нужно взять время time.time() и
             # вспомогательный модуль math (для округления, поскольку там миллисекунды есть)
             tm = math.floor(time.time())
-            self.__cur.execute("INSERT INTO posts VALUES(NULL, ?, ?, ?)", (title, text, tm))
+            self.__cur.execute("INSERT INTO posts VALUES(NULL, ?, ?, ?, ?)", (title, text, url, tm))
             self.__db.commit()
         except sqlite3.Error as e:
             print("Ошибка добавления статьи в БД" + str(e))
@@ -33,9 +39,10 @@ class FDataBase:
         return True
 
     # пропишем метод в классе, который будет БРАТЬ ДАННЫЕ ИЗ БД
-    def get_post_from_db(self, post_id):
+    def get_post_from_db(self, alias):
         try:
-            self.__cur.execute(f"SELECT title, text FROM posts WHERE id = {post_id} LIMIT 1")
+            # self.__cur.execute(f"SELECT title, text FROM posts WHERE id = {post_id} LIMIT 1")
+            self.__cur.execute(f"SELECT title, text FROM posts WHERE url LIKE '{alias}' LIMIT 1")
             res = self.__cur.fetchone()
             if res:
                 return res
@@ -47,7 +54,7 @@ class FDataBase:
     # пропишем метод в классе, который будет БРАТЬ ДАННЫЕ ИЗ БД для ГЛАВНОЙ СТРАНИЦЫ
     def get_posts_anonce(self):
         try:
-            self.__cur.execute(f"SELECT id, title, text FROM posts ORDER BY time DESC")
+            self.__cur.execute(f"SELECT id, title, text, url FROM posts ORDER BY time DESC")
             res = self.__cur.fetchall()
             if res:
                 return res

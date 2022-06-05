@@ -6,8 +6,8 @@
     <ul>
         {% for post in posts %}
             <li>
-                <p class="title"><a href="{{ url_for('show_post', id_post=post.id) }}">{{ post.title }}</a></p>
-                <p class="annonce">{{ post.text[:50] }}</p>
+                <p class="title"><a href="{{ url_for('show_post', alias=post.url) }}">{{ post.title }}</a></p><!-- id_post=post.id -->
+                <p class="annonce">{{ post.text[:50] | striptags }}</p>
             </li>
         {% endfor %}
     </ul>

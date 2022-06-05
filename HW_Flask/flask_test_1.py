@@ -103,7 +103,7 @@ def add_post():
 
     if request.method == "POST":  # если данные пришли по пост запросу
         if len(request.form['name']) > 4 and len(request.form['post']) > 10:
-            res = dbase.add_post_in_db(request.form['name'], request.form['post'])
+            res = dbase.add_post_in_db(request.form['name'], request.form['post'], request.form['url'])
             if not res:
                 flash('Ошибка добавления статьи', category='error')
             else:
@@ -114,11 +114,12 @@ def add_post():
     return render_template("add_post.html", title="Добавить статью", menu=dbase.get_menu())
 
 
-@app.route("/post/<int:id_post>")
-def show_post(id_post):
+# @app.route("/post/<int:id_post>")  # через id
+@app.route("/post/<alias>")  # через url
+def show_post(alias):
     db = get_db()
     dbase = FDataBase(db)
-    title, post = dbase.get_post_from_db(id_post)
+    title, post = dbase.get_post_from_db(alias)
     if not title:
         abort(404)
 

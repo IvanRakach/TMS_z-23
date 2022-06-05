@@ -17,12 +17,18 @@
     {% block content -%}
 
 <!--            Вариант 1 - явный вариант указания URL (прописываем урл через обращения к функции)-->
-            <ul>
-                <li><a href="{{ url_for('index') }}">Главная</a></li>
-                <li><a href="{{ url_for('add_post') }}">Добавить запись</a></li>
-            </ul>
+<!--            <ul>-->
+<!--                <li><a href="{{ url_for('index') }}">Главная</a></li>-->
+<!--                <li><a href="{{ url_for('add_post') }}">Добавить запись</a></li>-->
+<!--            </ul>-->
 <!--            Вариант 2 - вариант обращения к URL через БД-->
-
+            <ul>
+            {% for el in menu %}
+                <li>
+                    <a href="{{ el.url }}">{{ el.title }}</a>
+                </li>
+            {% endfor %}
+            </ul>
 
         {% if title -%}
             <h1>{{ title }}</h1>
