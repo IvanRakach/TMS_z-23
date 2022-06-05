@@ -1,10 +1,11 @@
 import os  # работа с файловой системой
 import sqlite3  # система упр БД
 
-from flask import Flask, render_template, url_for, request, flash, abort, session, g
-from werkzeug.utils import redirect
+from flask import Flask, render_template, url_for, request, flash, abort, session, g, redirect
+# from werkzeug.utils import redirect
+from werkzeug.security import generate_password_hash, check_password_hash
 
-from FDataBase import FDataBase
+from FDataBase import *  # FDataBase
 
 DATABASE = '/tmp/flsite.db'  # путь к нашей БД
 DEBUG = True
@@ -84,22 +85,28 @@ def close_db(error):  # error - передаем этот параметр и в
 #
 #
 #
-
+dbase = None
+@app.before_request
+def before_request():
+    """Установка соединения перед выполнением запроса"""
+    global dbase
+    db = get_db()
+    dbase = FDataBase(db)
 
 @app.route("/")
 def index():
     # index - имя функции; вызывается в контексте обработчика запроса - функции запроса (def index)
     print(url_for("index"))
-    db = get_db()
-    dbase = FDataBase(db)
+    # db = get_db()
+    # dbase = FDataBase(db)
     return render_template("index.html", menu=dbase.get_menu(), posts=dbase.get_posts_anonce())
 
 
 @app.route("/add-post", methods=['GET', 'POST'])
 def add_post():
     print(url_for("add_post"))
-    db = get_db()
-    dbase = FDataBase(db)
+    # db = get_db()
+    # dbase = FDataBase(db)
 
     if request.method == "POST":  # если данные пришли по пост запросу
         if len(request.form['name']) > 4 and len(request.form['post']) > 10:
@@ -117,8 +124,8 @@ def add_post():
 # @app.route("/post/<int:id_post>")  # через id
 @app.route("/post/<alias>")  # через url
 def show_post(alias):
-    db = get_db()
-    dbase = FDataBase(db)
+    # db = get_db()
+    # dbase = FDataBase(db)
     title, post = dbase.get_post_from_db(alias)
     if not title:
         abort(404)
@@ -159,25 +166,25 @@ def profile(username):
     return f"Профиль пользователя: {username}"
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if 'userLogged' in session:
-        print(url_for("login"))
-        print(url_for("profile"))
-        print('1')
-        return redirect(url_for("profile", username=session["userLogged"]))
-    elif request.method == ["POST"] and request.form["username"] == "ivan" and request.form["psw"] == 'qqq':
-        print(url_for("login"))
-        print(url_for("profile"))
-        print('2')
-        session['userLogged'] = request.form["username"]
-        return redirect(url_for("profile", username=session["userLogged"]))
-    # if request.method == ["POST"]:
-    #     print(f"{request.form['username']}")
-    #     print(f"{request.form['psw']}")
-    #     return redirect(url_for("profile"))
-    print('/login')
-    return render_template("login.html", title="Авторизация", menu=menu)
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     if 'userLogged' in session:
+#         print(url_for("login"))
+#         print(url_for("profile"))
+#         print('1')
+#         return redirect(url_for("profile", username=session["userLogged"]))
+#     elif request.method == ["POST"] and request.form["username"] == "ivan" and request.form["psw"] == 'qqq':
+#         print(url_for("login"))
+#         print(url_for("profile"))
+#         print('2')
+#         session['userLogged'] = request.form["username"]
+#         return redirect(url_for("profile", username=session["userLogged"]))
+#     # if request.method == ["POST"]:
+#     #     print(f"{request.form['username']}")
+#     #     print(f"{request.form['psw']}")
+#     #     return redirect(url_for("profile"))
+#     print('/login')
+#     return render_template("login.html", title="Авторизация", menu=menu)
 
 
 @app.errorhandler(404)
@@ -187,6 +194,29 @@ def pagenotfound(error):  # error - передается ошибка серве
 # который мы получаем, если наш обработчик (handler) обработал ошибку "404",
 # а код 404, то нам нужно просто через запятую указать "404"
 # return render_template('page404.html', title="Страница не найдена"), 404
+
+@app.route("/login")
+def login():
+    return render_template("login2.html", menu=dbase.get_menu(), title="Авторизация")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        if len(request.form['name']) > 4 and len(request.form['email']) > 4 \
+            and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
+            hash = generate_password_hash(request.form['psw'])
+            res = dbase.add_user(request.form['name'], request.form['email'], hash)
+            if res:
+                flash("Вы успешно зарегестрированы", "success")
+                return redirect(url_for('login'))
+            else:
+                flash("Ошибка при добавлении в базу данных", "error")
+        else:
+            flash("Неверно заполнены поля", "error")
+
+    return render_template("register.html", menu=dbase.get_menu(), title="Регистрация")
+
 
 # -------------------------------------------------------------------------
 # когда мы запускаем лок веб сервер name принимает значение main
