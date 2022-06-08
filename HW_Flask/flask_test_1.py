@@ -1,11 +1,13 @@
 import os  # работа с файловой системой
 import sqlite3  # система упр БД
+from flask_login import LoginManager  # управление процессом авторизации
 
 from flask import Flask, render_template, url_for, request, flash, abort, session, g, redirect
 # from werkzeug.utils import redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from FDataBase import *  # FDataBase
+from UserLogin import *  # UserLogin
 
 DATABASE = '/tmp/flsite.db'  # путь к нашей БД
 DEBUG = True
@@ -19,6 +21,13 @@ app = Flask(__name__)  # __name__ - имя нашего приложения / �
 app.config.from_object(__name__)
 # далее мы переопределим путь к БД нашего приложения
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
+
+login_manager = LoginManager(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    print("load_user")
+    return UserLogin().from_db(user_id, dbase)
 
 menu = [
     {"name": "Установка", "url": "install-flask"},

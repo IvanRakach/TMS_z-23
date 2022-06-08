@@ -79,3 +79,17 @@ class FDataBase:
             return False
 
         return True
+
+    def get_user_user_login(self, user_id):
+        try:
+            self.__cur.execute(f"SELECT * FROM users WHERE id = '{user_id}'")
+            res = self.__cur.fetchone()
+            if not res:
+                print("Пользователь не найден")
+                return False
+            return res
+
+        except sqlite3.Error as e:
+            print("Ошибка получения данных из БД"+str(e))
+
+        return False
