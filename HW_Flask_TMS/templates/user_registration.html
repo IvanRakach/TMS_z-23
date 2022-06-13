@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+    {{ super() }}
+
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-6 text-center">
+                <form action="{{ url_for('user_registration') }}" method="POST">
+
+<!--                    <input name="author" value="{'{' current_user.getName() '}'}">-->
+
+                    <div class="form-group">
+                        <label>Author name</label>
+                        <input name="name" type="text" class="form-control" placeholder="Enter author name">
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="InputEmail">Email address <strong style="color: red;">*</strong></label>
+                        <input name="email" type="email" class="form-control" id="InputEmail" placeholder="Enter email">
+                    </div>
+                    <div class="form-group mt-3">
+                        <input name="email_2" type="email" class="form-control" placeholder="Repeat email">
+                        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+
+
+                    <div class="form-group mt-3">
+                        <label>Password <strong style="color: red;">*</strong></label>
+                        <input type="password" class="form-control" name="psw" placeholder="Enter password" required>
+                    </div>
+                    <div class="form-group">
+<!--                        <label>Repeat password</label>-->
+                        <input type="password" class="form-control mt-3" name="psw_2" placeholder="Repeat password" required>
+                    </div>
+
+                    <div class="form-group row mt-3">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="rules_checkbox" id="AgreeCheck" required>
+                                <label class="form-check-label" for="AgreeCheck">
+                                    <small>
+                                        I agree with Best Software and Services Agreement
+                                        <strong style="color: red;">*</strong>
+                                    </small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mt-3">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name='remember_me_checkbox' id="RememberMeCheck">
+                            <label class="form-check-label" for="RememberMeCheck">
+                                <small>
+                                    Remember me
+                                </small>
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-color mt-3">Register</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -18,17 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///news_app.db'
 db = SQLAlchemy(app)
 
 
-class Users(db.Model):
-    """Defining table in 'news_app' DB"""
-    id = db.Column(db.Integer, primary_key=True)
 
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'news_app.db'),
-    DEBUG=True,
-    SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='admin'
-))
 
 
 

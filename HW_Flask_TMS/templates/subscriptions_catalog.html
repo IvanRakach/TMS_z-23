@@ -1,0 +1,114 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+    {{ super() }}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-15 text-center">
+                <form action="{{ url_for('subscriptions_catalog') }}" method="POST">
+
+                    <div class="sub_offer_block">
+                        <div class="">
+                            <div>
+                                <h3>Digital Trial</h3>
+                            </div>
+                            <div class="sub_offer_header_block">
+                                Full Premium Digital access for 4 weeks
+                            </div>
+                            <div class="sub_offer_img_block mt-2">
+                                <img src="{{ url_for('static', filename='img/sub_page_digital_trial.png') }}" />
+                            </div>
+                            <div class="mt-3">
+                                <span><strong>$1</strong> for 4 weeks</span>
+                            </div>
+                            <div class="mt-1">
+                                <p class="sub_offer_descr_block">Then $69 per month</p>
+                                <p class="sub_offer_descr_block">New customers only</p>
+                                <p class="sub_offer_descr_block">Cancel anytime during your trial</p>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-color-purchase mt-3 mb-3">Select</button>
+                        <div>
+                            <ul class="sub_offer_func_block">
+                                <li>Unlimited access to all articles, columns and features on desktop and mobile</li>
+                                <li>Lex Column – our agenda setting daily column</li>
+                                <li>ePaper access – the digital replica of the printed newspaper</li>
+                                <li>In-depth analysis – on trade, emerging markets, M&A, investing and more</li>
+                                <li>Gift Article – share up to 20 articles a month with family, friends and colleagues</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="sub_offer_block">
+                        <div>
+                            <div>
+                                <h3>Standard Digital</h3>
+                            </div>
+                            <div class="sub_offer_header_block">
+                                Be informed with the essential news and opinion
+                            </div>
+                            <div class="sub_offer_img_block mt-2">
+                                <img src="{{ url_for('static', filename='img/sub_page_standard_digital.png') }}" />
+                            </div>
+                            <div class="mt-3">
+                                <p class="sub_offer_descr_block"><strong>$375</strong> per year</p>
+                                <p class="sub_offer_descr_block">OR</p>
+                                <p class="sub_offer_descr_block"><strong>$40</strong> per month</p>
+                            </div>
+                            <div>
+                                <p class="sub_offer_descr_block mt-1">PAY ANNUALLY & SAVE 20%</p>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn-color-purchase mt-3 mb-3">Select</button>
+                        <div>
+                            <ul class="sub_offer_func_block">
+                                <li>Over 600 journalists in 50+ countries covering markets, politics, business, tech and more</li>
+                                <li>FirstFT: a daily newsletter with the global stories you need to know</li>
+                                <li>Editor's Choice: a weekly newsletter featuring the editor's favourite stories</li>
+                                <li>Share 10 articles per month with colleagues, family and friends</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="sub_offer_block">
+                        <div>
+                            <div>
+                                <h3>Premium Digital</h3>
+                            </div>
+                            <div class="sub_offer_header_block">
+                                Complete digital access to all our content
+                            </div>
+                            <div class="sub_offer_img_block mt-2">
+                                <img src="{{ url_for('static', filename='img/sub_page_premium_digital.png') }}" />
+                            </div>
+                            <div class="mt-3">
+                                <p class="sub_offer_descr_block"><strong>$629</strong> per year</p>
+                                <p class="sub_offer_descr_block">OR</p>
+                                <p class="sub_offer_descr_block"><strong>$69</strong> per month</p>
+                            </div>
+                            <div>
+                                <p class="sub_offer_descr_block mt-1">PAY ANNUALLY & SAVE 20%</p>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn-color-purchase mt-3 mb-3">Select</button>
+                        <div>
+                            <span>All benefits of Standard Digital, plus:</span>
+                            <ul class="sub_offer_func_block">
+                                <li>Lex: our agenda-setting column on business and finance that highlights key emerging risks and opportunities</li>
+                                <li>Our award-winning Unhedged newsletter, where Robert Armstrong dissects the most important market trends</li>
+                                <li>Access to all of our other newsletters, including 15 exclusive to Premium, with curated updates on global themes from M&A to tech to responsible investing</li>
+                                <li>ePaper: a digital replica of the print edition for all devices</li>
+                                <li>Share 20 articles per month with colleagues, family and friends</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

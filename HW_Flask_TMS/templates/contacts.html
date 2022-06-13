@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+    {{ super() }}
+    <div class="container mt-5">
+
+        <h3 class="text-center">"Contacts page" information</h3>
+
+        <div class="about_block_1">
+            <div class="mt-5">
+                <div>
+                    <span><strong>HEADQUARTERS</strong></span>
+                    <p style="text-align: left;">
+                        Empire State Building
+                    </p>
+                    <p class="mt_n5" style="text-align: left;">Address: 350 5th Ave, New York</p>
+                    <p class="mt_n5" style="text-align: left;">ZIP: NY 10001</p>
+                    <p class="mt_n5" style="text-align: left;">Phone:
+                        <a href="tel:(212) 736-3100">(212) 736-3100</a>
+                    </p>
+                    <p class="mt_n5" style="text-align: left;">Email:
+                        <a href="mailto:abc@gmail.com">abc@gmail.com</a>
+                    </p>
+
+                </div>
+                <div>
+                    <span><strong>TIN</strong></span>
+                    <p class="" style="text-align: left;">123456789</p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="about_block_2">
+            <div class="mt-5 about_img_block">
+                <img src="{{ url_for('static', filename='img/contacts_page_img.png') }}" />
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
