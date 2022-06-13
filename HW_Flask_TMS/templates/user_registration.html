@@ -3,6 +3,9 @@
 {% block maincontent %}
     {{ super() }}
 
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{ cat }}">{{ msg }}</div>
+    {% endfor %}
 
     <div class="container mt-5">
         <div class="row justify-content-center">

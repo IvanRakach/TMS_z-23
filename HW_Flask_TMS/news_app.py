@@ -1,35 +1,118 @@
 import os  # library for work file system
-from flask import Flask
+from datetime import datetime
+
+from flask import Flask, render_template, url_for, redirect, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
 
 # configuration
 DATABASE = '/tmp/news_app.db'  # path to our DB
 
-
-app = Flask(__name__)  # создаем экзампляр приложения
+app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///news_app.db'
+app.config['SECRET_KEY'] = 'KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost/news_app.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:password@localhost/news_app.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'oracle://user:password@127.0.0.1:1521/news_app.db'
 
-# создадим ЭК SQLAlchemy ('db') через который и осуществляется работа с БД посредством передачи ссылки
-# на наше приложение 'app'
 db = SQLAlchemy(app)
 
 
+class Author(db.Model):
+    """Defining table 'authors' in 'news_app' DB"""
+    __tablename__ = 'authors'
+    id = db.Column(db.Integer, primary_key=True)
+    author_name = db.Column(db.String(80), unique=True, nullable=False)
+    author_email = db.Column(db.String(120), unique=True, nullable=False)
+    author_password = db.Column(db.String(70), nullable=True)
+    author_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<users {self.author_name}>"
 
 
+class NewsArticles(db.Model):
+    """Defining table 'news_articles' in 'news_app' DB"""
+    __tablename__ = 'news_articles'
+    id = db.Column(db.Integer, primary_key=True)
+    article_title = db.Column(db.String(70))
+    article_body = db.Column(db.Text)
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    author_id = db.Column(db.Integer, db.ForeignKey('authors.id'), nullable=False)
+    author = db.relationship('Author', backref=db.backref('news_articles', lazy=True))
+
+    category_id = db.Column(db.Integer, db.ForeignKey('news_category.id'), nullable=False)
+    category = db.relationship('NewsCategory', backref=db.backref('news_articles', lazy=True))
+
+    def __repr__(self):
+        return f"<news_articles {self.article_title}>"
 
 
+class NewsCategory(db.Model):
+    __tablename__ = 'news_category'
+    id = db.Column(db.Integer, primary_key=True)
+    category_name = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f"<news_articles {self.category_name}>"
 
 
+@app.route('/')
+def index():
+    print(url_for('index'))
+    return render_template('index.html', title='Home page')
 
 
+@app.route('/about')
+def about():
+    print(url_for('about'))
+    return render_template('about.html', title='About us')
 
 
+@app.route('/add-article')
+def add_article():
+    print(url_for('add_article'))
+    return redirect(url_for('index'))
+    # return render_template('add_article.html')
 
 
+@app.route('/user-registration', methods=['GET', 'POST'])
+def user_registration():
+    print(url_for('user_registration'))
+
+    if request.method == 'POST':
+        # print(request.form)
+        # print(request.form['name'])
+        if len(request.form['name']) > 2:
+            flash('Congratulations! Author has been registered!', category='success')
+        else:
+            flash('Error in field "name"', category='error')
+
+    return render_template('user_registration.html', title='Registration')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    print(url_for('login'))
+
+    # if 'userLogged' in session:
+    #     return redirect(url_for())
+
+    return render_template('login.html', title='Login')
+
+
+@app.route('/subscriptions-catalog')
+def subscriptions_catalog():
+    print(url_for('subscriptions_catalog'))
+    return render_template('subscriptions_catalog.html', title='Subscribe')
+
+
+@app.route('/contacts')
+def contacts():
+    print(url_for('contacts'))
+    return render_template('contacts.html', title='Contacts')
 
 
 if __name__ == "__main__":
