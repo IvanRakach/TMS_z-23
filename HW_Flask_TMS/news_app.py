@@ -5,6 +5,8 @@ from flask import Flask, render_template, url_for, redirect, request, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 
 # configuration
+from werkzeug.security import generate_password_hash, check_password_hash
+
 DATABASE = '/tmp/news_app.db'  # path to our DB
 
 app = Flask(__name__)
@@ -32,7 +34,7 @@ class Author(db.Model):
         return f"<users {self.author_name}>"
 
 
-class NewsArticles(db.Model):
+class NewsArticle(db.Model):
     """Defining table 'news_articles' in 'news_app' DB"""
     __tablename__ = 'news_articles'
     id = db.Column(db.Integer, primary_key=True)
@@ -78,23 +80,54 @@ def add_article():
     if request.method == 'POST':
         print(request.form['title'])
         print(request.form['post'])
-    return render_template('add_article.html')
+        # try:
+        #     posts = NewsArticle(article_title=request.form['title'], article_body=request.form['post'])
+        #     db.session.add(posts)  # ссылка на ЭК 'NewsArticle'
+        #     print('db.session.add - ok')
+        #     # db.session.flush()  # перемещение записи из сессии в табл, но пока все еще в памяти устройства
+        #     print('db.session.flush - ok')
+        #     db.session.commit()
+        #     print('db.session.commit - ok')
+        #     flash('Congratulations! You have added an article!', category='success')
+        # except:
+        #     db.session.rollback()
+        #     flash('Error in adding article process', category='error')
+    return render_template('add_article.html', title='Add article')
 
 
 @app.route('/user-registration', methods=['GET', 'POST'])
 def user_registration():
     print(url_for('user_registration'))
-
     if request.method == 'POST':
-        # print(request.form)
-        # print(request.form['name'])
-        if len(request.form['name']) > 2:
-            flash('Congratulations! Author has been registered!', category='success')
-        else:
-            flash('Error in field "name"', category='error')
+        print('POST - ok')
+        try:
+            hash = generate_password_hash(request.form['psw'])
+            print('hash - ok')
+            authors = Author(author_name=request.form['name'],
+                             author_email=request.form['email'],
+                             author_password=hash)
+            print('authors - ok')
+            db.session.add(authors)  # ссылка на ЭК 'authors'
+            print('db.session.add - ok')
+            db.session.flush()  # перемещение записи из сессии в табл, но пока все еще в памяти устройства
+            print('db.session.flush - ok')
+
+            db.session.commit()
+            print('db.session.commit - ok')
+            flash('Congratulations! You have been registered!', category='success')
+        except:
+            db.session.rollback()
+            flash('Error in saving process', category='error')
+    # if request.method == 'POST':
+    #     # print(request.form)
+    #     # print(request.form['name'])
+    #     if len(request.form['name']) > 2:
+    #         flash('Congratulations! Author has been registered!', category='success')
+    #     else:
+    #         flash('Error in field "name"', category='error')
 
     return render_template('user_registration.html', title='Registration')
-
+# author_name,author_email ,author_password ,author_date
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
