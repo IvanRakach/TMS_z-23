@@ -3,6 +3,7 @@ from datetime import datetime
 
 from flask import Flask, render_template, url_for, redirect, request, flash, session, abort
 from flask_sqlalchemy import SQLAlchemy
+# from flask_login import LoginManager, login_required, logout_user
 
 # configuration
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,6 +20,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'oracle://user:password@127.0.0.1:1521/news_app.db'
 
 db = SQLAlchemy(app)
+# login_manager = LoginManager(app)
 
 
 class Author(db.Model):
@@ -99,25 +101,29 @@ def add_article():
 def user_registration():
     print(url_for('user_registration'))
     if request.method == 'POST':
-        print('POST - ok')
-        try:
-            hash = generate_password_hash(request.form['psw'])
-            print('hash - ok')
-            authors = Author(author_name=request.form['name'],
-                             author_email=request.form['email'],
-                             author_password=hash)
-            print('authors - ok')
-            db.session.add(authors)  # ссылка на ЭК 'authors'
-            print('db.session.add - ok')
-            db.session.flush()  # перемещение записи из сессии в табл, но пока все еще в памяти устройства
-            print('db.session.flush - ok')
+        # print('POST - ok')
+        user = Author.query.filter_by(author_email=request.form['email']).first()
+        if user:
+            flash('Such user is already exists', category='error')
+        else:
+            try:
+                hash = generate_password_hash(request.form['psw'])
+                # print('hash - ok')
+                authors = Author(author_name=request.form['name'],
+                                 author_email=request.form['email'],
+                                 author_password=hash)
+                # print('authors - ok')
+                db.session.add(authors)  # ссылка на ЭК 'authors'
+                # print('db.session.add - ok')
+                db.session.flush()  # перемещение записи из сессии в табл, но пока все еще в памяти устройства
+                # print('db.session.flush - ok')
 
-            db.session.commit()
-            print('db.session.commit - ok')
-            flash('Congratulations! You have been registered!', category='success')
-        except:
-            db.session.rollback()
-            flash('Error in saving process', category='error')
+                db.session.commit()
+                # print('db.session.commit - ok')
+                flash('Congratulations! You have been registered!', category='success')
+            except:
+                db.session.rollback()
+                flash('Error in saving process', category='error')
     # if request.method == 'POST':
     #     # print(request.form)
     #     # print(request.form['name'])
@@ -132,15 +138,37 @@ def user_registration():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     print(url_for('login'))
+    if request.method == 'POST':
+        print('POST - ok')
+        email = request.form.get('email')
+        print(f"email - {email}")
+        password = request.form.get('psw')
+        print(f"password - {password}")
 
-    if 'userLogged' in session:
-        return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
-    elif request.method == 'POST' and request.form['email'] == 'ivan@gmail.com' and request.form['psw'] == '123':
-        session['userLogged'] = request.form['email']
-        return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
+        author = Author.query.filter_by(author_email=email).first()
+
+        print('Starting checking...')
+        if not author or not check_password_hash(author.author_password, request.form['psw']):
+            print(f"author_email_db - {author}")
+            flash('Please check your login details and try again.', category='error')
+            return redirect('login')
+
+        return redirect(url_for('about'))
+
+    # if 'userLogged' in session:
+    #     return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
+    # elif request.method == 'POST' and request.form['email'] == 'ivan@gmail.com' and request.form['psw'] == '123':
+    #     session['userLogged'] = request.form['email']
+    #     return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
 
     return render_template('login.html', title='Login')
 
+
+# @app.route('/logout')
+# @login_required
+# def logout():
+#     logout_user()
+#     return redirect(url_for('login'))
 
 @app.route('/profile/<email>')
 def profile(email):
