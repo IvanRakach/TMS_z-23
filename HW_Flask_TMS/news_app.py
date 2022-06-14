@@ -1,7 +1,7 @@
 import os  # library for work file system
 from datetime import datetime
 
-from flask import Flask, render_template, url_for, redirect, request, flash, session
+from flask import Flask, render_template, url_for, redirect, request, flash, session, abort
 from flask_sqlalchemy import SQLAlchemy
 
 # configuration
@@ -71,11 +71,14 @@ def about():
     return render_template('about.html', title='About us')
 
 
-@app.route('/add-article')
+@app.route('/add-article', methods=['GET', 'POST'])
 def add_article():
     print(url_for('add_article'))
-    return redirect(url_for('index'))
-    # return render_template('add_article.html')
+    # return redirect(url_for('index'))
+    if request.method == 'POST':
+        print(request.form['title'])
+        print(request.form['post'])
+    return render_template('add_article.html')
 
 
 @app.route('/user-registration', methods=['GET', 'POST'])
@@ -97,10 +100,20 @@ def user_registration():
 def login():
     print(url_for('login'))
 
-    # if 'userLogged' in session:
-    #     return redirect(url_for())
+    if 'userLogged' in session:
+        return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
+    elif request.method == 'POST' and request.form['email'] == 'ivan@gmail.com' and request.form['psw'] == '123':
+        session['userLogged'] = request.form['email']
+        return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
 
     return render_template('login.html', title='Login')
+
+
+@app.route('/profile/<email>')
+def profile(email):
+    if 'userLogged' not in session or session['userLogged'] != email:
+        abort(401)
+    return f"Profile (email): {email}"
 
 
 @app.route('/subscriptions-catalog')
