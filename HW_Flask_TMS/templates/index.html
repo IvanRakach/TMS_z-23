@@ -4,4 +4,10 @@
     {{ super() }}
     <p>Содержимое "главной страницы"</p>
 
+
+    {% for news in all_news_query %}
+        <p>{{ news }}</p>
+    {% endfor %}
+
+
 {% endblock %}

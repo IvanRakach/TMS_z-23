@@ -14,9 +14,6 @@
 <body>
     <header>
         <div class="header_block_1_wrapper">
-<!--            <div class="tel">-->
-<!--                <a href="/">+375 (11) 111-22-33</a>-->
-<!--            </div>-->
             <div class="news">
                 <a href="{{ url_for('index') }}">WORLD NEWS</a>
             </div>
@@ -28,11 +25,13 @@
         <div class="header_block_2_wrapper">
             <ul class="hor_menu">
                 <li><a href="{{ url_for('about') }}">ABOUT</a></li>
-                <li><a href="{{ url_for('add_article') }}">ADD NEWS</a></li>
-                <li><a href="{{ url_for('user_registration') }}">REGISTRATION</a></li>
-                <li><a href="{{ url_for('login') }}">SIGN IN</a></li>
-                <li><a href="{{ url_for('subscriptions_catalog') }}">SUBSCRIBE</a></li>
                 <li><a href="{{ url_for('contacts') }}">CONTACTS</a></li>
+                <li><a href="{{ url_for('subscriptions_catalog') }}">SUBSCRIBE</a></li>
+                <li><a href="{{ url_for('sign_up') }}">SIGN UP</a></li>
+                <li><a href="{{ url_for('sign_in') }}">SIGN IN</a></li>
+                <li><a href="{{ url_for('sign_out') }}">SIGN OUT</a></li>
+                <li><a href="{{ url_for('profile') }}">PROFILE</a></li>
+
             </ul>
         </div>
 

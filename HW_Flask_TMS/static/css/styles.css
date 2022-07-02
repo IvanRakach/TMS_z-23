@@ -227,3 +227,8 @@ header{
     background-color: #FF9C9C; /* #FF9C9C */
 }
 
+/*?*/
+.check_div_label{
+    width: 80%;
+    float: left;
+}

@@ -1,193 +1,214 @@
-import os  # library for work file system
+from flask import Flask, render_template, redirect, url_for, request, flash
 from datetime import datetime
-
-from flask import Flask, render_template, url_for, redirect, request, flash, session, abort
 from flask_sqlalchemy import SQLAlchemy
-# from flask_login import LoginManager, login_required, logout_user
-
-# configuration
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DATABASE = '/tmp/news_app.db'  # path to our DB
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, EmailField
+from wtforms.validators import DataRequired, EqualTo, Length, Email
+
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config['SECRET_KEY'] = '1234567890qwerty'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///news_app.db'
-app.config['SECRET_KEY'] = 'KASHDBJKQHBE12B31JHB4JNASKDJNdfssfegvc#'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost/news_app.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://user:password@localhost/news_app.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'oracle://user:password@127.0.0.1:1521/news_app.db'
 
+# Initializing database
 db = SQLAlchemy(app)
-# login_manager = LoginManager(app)
+
+# Flask_login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'sign_in'
 
 
-class Author(db.Model):
-    """Defining table 'authors' in 'news_app' DB"""
-    __tablename__ = 'authors'
-    id = db.Column(db.Integer, primary_key=True)
-    author_name = db.Column(db.String(80), unique=True, nullable=False)
-    author_email = db.Column(db.String(120), unique=True, nullable=False)
-    author_password = db.Column(db.String(70), nullable=True)
-    author_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f"<users {self.author_name}>"
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
 
 
-class NewsArticle(db.Model):
-    """Defining table 'news_articles' in 'news_app' DB"""
-    __tablename__ = 'news_articles'
-    id = db.Column(db.Integer, primary_key=True)
-    article_title = db.Column(db.String(70))
-    article_body = db.Column(db.Text)
-    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    author_id = db.Column(db.Integer, db.ForeignKey('authors.id'), nullable=False)
-    author = db.relationship('Author', backref=db.backref('news_articles', lazy=True))
-
-    category_id = db.Column(db.Integer, db.ForeignKey('news_category.id'), nullable=False)
-    category = db.relationship('NewsCategory', backref=db.backref('news_articles', lazy=True))
-
-    def __repr__(self):
-        return f"<news_articles {self.article_title}>"
+class SignUpForm(FlaskForm):
+    """Create Sign Up Form"""
+    username = StringField("Username", validators=[DataRequired()])
+    name = StringField("Name", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    password_hash = PasswordField("Password",
+                                  validators=[DataRequired(),
+                                              EqualTo("password_hash_2", message='Passwords must match!')])
+    password_hash_2 = PasswordField("Confirm Password", validators=[DataRequired()])
+    agreement = BooleanField("I accept the privacy policy", validators=[DataRequired()])
+    remember_me = BooleanField("Remember me")
+    submit = SubmitField('Submit')
 
 
-class NewsCategory(db.Model):
-    __tablename__ = 'news_category'
-    id = db.Column(db.Integer, primary_key=True)
-    category_name = db.Column(db.String(50), nullable=False)
+class LoginForm(FlaskForm):
+    """Create Login Form"""
+    email = EmailField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+####################################################################################################
 
-    def __repr__(self):
-        return f"<news_articles {self.category_name}>"
 
-
-@app.route('/')
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    print(url_for('index'))
-    return render_template('index.html', title='Home page')
+    all_news_query = Posts.query.order_by(Posts.date_posted)
+    return render_template('index.html', all_news_query=all_news_query)
 
 
-@app.route('/about')
+@app.route("/about")
 def about():
-    print(url_for('about'))
-    return render_template('about.html', title='About us')
+    return render_template('about.html')
 
 
-@app.route('/add-article', methods=['GET', 'POST'])
-def add_article():
-    print(url_for('add_article'))
-    # return redirect(url_for('index'))
-    if request.method == 'POST':
-        print(request.form['title'])
-        print(request.form['post'])
-        # try:
-        #     posts = NewsArticle(article_title=request.form['title'], article_body=request.form['post'])
-        #     db.session.add(posts)  # ссылка на ЭК 'NewsArticle'
-        #     print('db.session.add - ok')
-        #     # db.session.flush()  # перемещение записи из сессии в табл, но пока все еще в памяти устройства
-        #     print('db.session.flush - ok')
-        #     db.session.commit()
-        #     print('db.session.commit - ok')
-        #     flash('Congratulations! You have added an article!', category='success')
-        # except:
-        #     db.session.rollback()
-        #     flash('Error in adding article process', category='error')
-    return render_template('add_article.html', title='Add article')
-
-
-@app.route('/user-registration', methods=['GET', 'POST'])
-def user_registration():
-    print(url_for('user_registration'))
-    if request.method == 'POST':
-        # print('POST - ok')
-        user = Author.query.filter_by(author_email=request.form['email']).first()
-        if user:
-            flash('Such user is already exists', category='error')
-        else:
-            try:
-                hash = generate_password_hash(request.form['psw'])
-                # print('hash - ok')
-                authors = Author(author_name=request.form['name'],
-                                 author_email=request.form['email'],
-                                 author_password=hash)
-                # print('authors - ok')
-                db.session.add(authors)  # ссылка на ЭК 'authors'
-                # print('db.session.add - ok')
-                db.session.flush()  # перемещение записи из сессии в табл, но пока все еще в памяти устройства
-                # print('db.session.flush - ok')
-
-                db.session.commit()
-                # print('db.session.commit - ok')
-                flash('Congratulations! You have been registered!', category='success')
-            except:
-                db.session.rollback()
-                flash('Error in saving process', category='error')
-    # if request.method == 'POST':
-    #     # print(request.form)
-    #     # print(request.form['name'])
-    #     if len(request.form['name']) > 2:
-    #         flash('Congratulations! Author has been registered!', category='success')
-    #     else:
-    #         flash('Error in field "name"', category='error')
-
-    return render_template('user_registration.html', title='Registration')
-# author_name,author_email ,author_password ,author_date
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    print(url_for('login'))
-    if request.method == 'POST':
-        print('POST - ok')
-        email = request.form.get('email')
-        print(f"email - {email}")
-        password = request.form.get('psw')
-        print(f"password - {password}")
-
-        author = Author.query.filter_by(author_email=email).first()
-
-        print('Starting checking...')
-        if not author or not check_password_hash(author.author_password, request.form['psw']):
-            print(f"author_email_db - {author}")
-            flash('Please check your login details and try again.', category='error')
-            return redirect('login')
-
-        return redirect(url_for('about'))
-
-    # if 'userLogged' in session:
-    #     return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
-    # elif request.method == 'POST' and request.form['email'] == 'ivan@gmail.com' and request.form['psw'] == '123':
-    #     session['userLogged'] = request.form['email']
-    #     return redirect(url_for('profile', email=session['userLogged']))  # name=session['userLogged']
-
-    return render_template('login.html', title='Login')
-
-
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect(url_for('login'))
-
-@app.route('/profile/<email>')
-def profile(email):
-    if 'userLogged' not in session or session['userLogged'] != email:
-        abort(401)
-    return f"Profile (email): {email}"
-
-
-@app.route('/subscriptions-catalog')
-def subscriptions_catalog():
-    print(url_for('subscriptions_catalog'))
-    return render_template('subscriptions_catalog.html', title='Subscribe')
-
-
-@app.route('/contacts')
+@app.route("/contacts")
 def contacts():
-    print(url_for('contacts'))
-    return render_template('contacts.html', title='Contacts')
+    return render_template('contacts.html')
 
 
-if __name__ == "__main__":
+@app.route("/subscriptions-catalog")
+def subscriptions_catalog():
+    return render_template('subscriptions_catalog.html')
+
+
+@app.route("/sign-up", methods=['GET', 'POST'])
+def sign_up():
+    name = None
+    form = SignUpForm()
+
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.data).first()
+        if user is None:
+            hashed_pswrd = generate_password_hash(form.password_hash.data, "sha256")
+            new_user = Users(
+                username=form.username.data,
+                name=form.name.data,
+                email=form.email.data,
+                password_hash=hashed_pswrd,
+                agreement=form.agreement.data,
+                remember_me=form.remember_me.data,
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            form.username.data = ''
+            form.name.data = ''
+            form.email.data = ''
+            form.password_hash.data = ''
+            form.agreement.data = False
+            form.remember_me.data = False
+
+            flash('You have signed up!', category='success')
+        else:
+            flash('User with such Email address already exists!', category='danger')
+
+    our_users = Users.query.order_by(Users.date_added)
+    return render_template('sign_up.html', name=name, form=form, our_users=our_users)
+
+
+@app.route("/sign-in", methods=['GET', 'POST'])
+def sign_in():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.data).first()
+        # if there is a user:
+        if user:
+            # Check the hash
+            if check_password_hash(user.password_hash, form.password.data):
+                login_user(user)
+                # flash(f"Welcome! {user.username}!", category='success')
+                return redirect(url_for('profile'))
+            else:
+                flash('Wrong password! Please try again...', category='danger')
+        else:
+            flash("That user doesn't exist! Please try again...", category='danger')
+
+    return render_template('sign_in.html', form=form)
+
+
+@app.route("/logout", methods=['GET', 'POST'])
+@login_required
+def sign_out():
+    logout_user()
+    flash("You have been logged out!", category='info')
+    return redirect(url_for('sign_in'))
+
+
+@app.route("/profile", methods=['GET', 'POST'])
+@login_required
+def profile():
+    return render_template('profile.html')
+
+
+@app.route("/-", methods=['GET', 'POST'])
+
+# def profile():
+#     form = UserForm()
+#     id = current_user.id
+#     name_to_update = User.query.get_or_404(id)
+#
+#     if request.method == "POST":
+#         name_to_update.name = request.form['name']
+#         name_to_update.email = request.form['email']
+#         name_to_update.username = request.form['username']
+#         try:
+#             db.session.commit()
+#             flash('User Updated Successfully')
+#             return render_template('profile.html',
+#                                    form=form, name_to_update=name_to_update, id=id)
+#         except:
+#             flash('Error!')
+#             return render_template('profile.html',
+#                                    form=form, name_to_update=name_to_update, id=id)
+#     else:
+#         return render_template('profile.html',
+#                                form=form, name_to_update=name_to_update, id=id)
+
+#######################################################################################################################
+class Posts(db.Model):
+    __tablename__ = 'news_app_posts'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    # slug = db.Column(db.String(255))
+    # Foreign key to Link users (refer to primary key of the user)
+    poster_id = db.Column(db.Integer, db.ForeignKey('news_app_user.id'))
+
+
+class Users(db.Model, UserMixin):
+    __tablename__ = 'news_app_user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    # Do some password stuff
+    password_hash = db.Column(db.String(128))
+    agreement = db.Column(db.Boolean, default=False, nullable=False)
+    remember_me = db.Column(db.Boolean, default=False, nullable=False)
+    # User can have many posts
+    posts = db.relationship('Posts', backref='poster')
+
+    @property
+    def password(self):
+        raise AttributeError('Password is not a readable attribute!')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    # Create a string
+    def __repr__(self):
+        return f'<Name{self.name}>'
+
+
+if __name__ == '__main__':
     app.run(debug=True)

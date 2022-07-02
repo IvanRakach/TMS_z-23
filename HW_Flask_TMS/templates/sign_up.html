@@ -1,0 +1,128 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+    {{ super() }}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-6 text-center">
+                <form action="{{ url_for('sign_up') }}" method="POST">
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-group">
+<!--                        <label>User name <strong style="color: red;">*</strong></label>-->
+<!--                        <input name="username" type="text" class="form-control" placeholder="Enter user name" required>-->
+                        {{ form.username.label(class="form-label") }}
+                        <strong style="color: red;">*</strong>
+                        {{ form.username(class="form-control", placeholder="Enter username") }}
+                    </div>
+
+                    <div class="form-group mt-3">
+<!--                        <label>Name <strong style="color: red;">*</strong></label>-->
+<!--                        <input name="name" type="text" class="form-control" placeholder="Enter name" required>-->
+                        {{ form.name.label(class="form-label") }}
+                        <strong style="color: red;">*</strong>
+                        {{ form.name(class="form-control", placeholder="Enter name") }}
+                    </div>
+
+                    <div class="form-group mt-3">
+<!--                        <label for="InputEmail">Email address <strong style="color: red;">*</strong></label>-->
+<!--                        <input name="email" type="email" class="form-control" id="InputEmail" placeholder="Enter email" required>-->
+                        {{ form.email.label(class="form-label") }}
+                        <strong style="color: red;">*</strong>
+                        {{ form.email(class="form-control", placeholder="Enter Email") }}
+                        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+
+
+                    <div class="form-group mt-3">
+<!--                        <label>Password <strong style="color: red;">*</strong></label>-->
+<!--                        <input type="password" class="form-control" name="psw" placeholder="Enter password" required>-->
+                        {{ form.password_hash.label(class="form-label") }}
+                        <strong style="color: red;">*</strong>
+                        {{ form.password_hash(class="form-control", placeholder="Enter password") }}
+                    </div>
+                    <div class="form-group">
+<!--                        <label>Repeat password</label>-->
+<!--                        <input type="password" class="form-control mt-3" name="psw_2" placeholder="Confirm password" required>-->
+                        {{ form.password_hash_2(class="form-control mt-3", placeholder="Confirm password") }}
+                    </div>
+
+                    <div class="form-group row mt-3">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <div>{{ form.agreement(class="form-check-input",
+                                    placeholder="Confirm password", type="checkbox") }}
+                                </div>
+                                <div>
+                                    <small>
+                                        {{ form.agreement.label(class="form-check-label") }}
+                                        <strong style="color: red;">*</strong>
+                                    </small>
+                                </div>
+<!--                                <input class="form-check-input" type="checkbox" name="rules_checkbox" id="AgreeCheck" required>-->
+<!--                                <label class="form-check-label" for="AgreeCheck">-->
+<!--                                    <small>-->
+<!--                                        I agree with Best Software and Services Agreement-->
+<!--                                        <strong style="color: red;">*</strong>-->
+<!--                                    </small>-->
+<!--                                </label>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row mt-3">
+                        <div class="col-md-auto">
+                            <div class="form-check">
+                                <div>{{ form.remember_me(class="form-check-input",
+                                    placeholder="Confirm password", type="checkbox") }}
+                                </div>
+                                <div>
+                                    <small>
+                                        {{ form.remember_me.label(class="form-check-label") }}
+                                    </small>
+                                </div>
+<!--                            <input class="form-check-input" type="checkbox" name='remember_me_checkbox' id="RememberMeCheck">-->
+<!--                            <label class="form-check-label" for="RememberMeCheck">-->
+<!--                                <small>-->
+<!--                                    Remember me-->
+<!--                                </small>-->
+<!--                            </label>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-color mt-3">Sign up</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        {% for user in our_users %}
+            <div>
+                id: {{ user.id }}<br>
+                username: {{ user.username }}<br>
+                name: {{ user.name }}<br>
+                email: {{ user.email }}<br>
+                password_hash: {{ user.password_hash }}<br>
+                agreement: {{ user.agreement }}<br>
+                remember_me: {{ user.remember_me }}<br>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
