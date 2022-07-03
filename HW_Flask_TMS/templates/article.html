@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+    {{ super() }}
+
+    <div class="shadow p-3 mt-3 bg-body rounded">
+        {{ post.title }}<br>
+        {{ post.date_posted }}<br>
+        {{ post.poster.name }}<br> <!-- author -->
+        {{ post.content|safe }}<br>
+
+    <br>
+    <a href="{{ url_for('index') }}"
+       class="btn btn-outline-primary btn-sm">Back</a>
+
+
+    </div>
+{% endblock %}

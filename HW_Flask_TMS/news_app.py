@@ -57,7 +57,7 @@ class LoginForm(FlaskForm):
 
 
 class AddArticleForm(FlaskForm):
-    """Create form for adding articles"""
+    """Create form for adding, editing and deleting articles"""
     title = StringField("Title", validators=[DataRequired()])
     content = StringField("Content", validators=[DataRequired()], widget=TextArea())
     submit = SubmitField("Publish")
@@ -68,6 +68,13 @@ class AddArticleForm(FlaskForm):
 def index():
     all_news_query = Posts.query.order_by(Posts.date_posted)
     return render_template('index.html', all_news_query=all_news_query)
+
+
+@app.route("/article/<int:id>")
+def article(id):
+    """Creating full article page"""
+    post = Posts.query.get_or_404(id)
+    return render_template("article.html", post=post)
 
 
 @app.route("/about")
@@ -157,6 +164,7 @@ def profile():
 
 
 @app.route("/add-article", methods=['GET', 'POST'])
+@login_required
 def add_article():
     form = AddArticleForm()
 
@@ -175,12 +183,71 @@ def add_article():
     return render_template('add_article.html', form=form)
 
 
-@app.route("/article/<int:id>")
-def article(id):
-    """Creating full article page"""
+@app.route("/article/edit/<int:id>", methods=['GET', 'POST'])
+@login_required
+def article_edit(id):
     post = Posts.query.get_or_404(id)
-    return render_template("post.html", post=post)
+    form = AddArticleForm()
 
+    if form.validate_on_submit():
+        post.title = form.title.data
+        # post.author = form.author.data
+        # post.slug = form.slug.data
+        post.content = form.content.data
+
+        # Update Database
+        db.session.add(post)
+        db.session.commit()
+        flash("Article has been updated!", category="success")
+
+        return redirect(url_for('article', id=post.id))
+
+    if current_user.id == post.poster_id:
+        form.title.data = post.title
+        # form.author.data = post.author
+        # form.slug.data = post.slug
+        form.content.data = post.content
+
+        return render_template("article_edit.html", form=form)
+    else:
+        flash("You aren't authorized to edit this post", category="warning")
+        all_news_query = Posts.query.order_by(Posts.date_posted)
+        return render_template('index.html', all_news_query=all_news_query)
+
+
+@app.route('/article/delete/<int:id>')
+@login_required
+def article_delete(id):
+    post_to_delete = Posts.query.get_or_404(id)
+    id = current_user.id
+    if id == post_to_delete.poster.id:
+
+        try:
+            db.session.delete(post_to_delete)
+            db.session.commit()
+
+            # Return a message
+            flash('Blog post has been deleted', category="success")
+
+            # Grab all the posts from database
+            all_news_query = Posts.query.order_by(Posts.date_posted)
+            return render_template('index.html', all_news_query=all_news_query)
+
+        except:
+            # Return an error message
+            flash('whoops! There was a problem deleting post... Try again...', category="warning")
+
+            # Grab all the posts from database
+            all_news_query = Posts.query.order_by(Posts.date_posted)
+            return render_template('index.html', all_news_query=all_news_query)
+
+    else:
+        # Return a message
+        flash("You aren't authorized to delete that post", category="warning")
+
+        # Grab all the posts from database
+        all_news_query = Posts.query.order_by(Posts.date_posted)
+        return render_template('index.html', all_news_query=all_news_query)
 
 
 #######################################################################################################################
