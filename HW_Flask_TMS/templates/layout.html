@@ -31,7 +31,7 @@
                 <li><a href="{{ url_for('subscriptions_catalog') }}">SUBSCRIBE</a></li>
                 {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('sign_out') }}">SIGN OUT</a></li>
-                    <li><a href="{{ url_for('add_article') }}">ADD ARTICLE</a></li>
+                    <li><a href="{{ url_for('article_add') }}">ADD ARTICLE</a></li>
                 {% else %}
                     <li><a href="{{ url_for('sign_up') }}">SIGN UP</a></li>
                     <li><a href="{{ url_for('sign_in') }}">SIGN IN</a></li>

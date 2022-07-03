@@ -165,7 +165,7 @@ def profile():
 
 @app.route("/add-article", methods=['GET', 'POST'])
 @login_required
-def add_article():
+def article_add():
     form = AddArticleForm()
 
     if form.validate_on_submit():
@@ -180,7 +180,7 @@ def add_article():
 
         flash('Article have been successfully added!', category='success')
 
-    return render_template('add_article.html', form=form)
+    return render_template('article_add.html', form=form)
 
 
 @app.route("/article/edit/<int:id>", methods=['GET', 'POST'])
