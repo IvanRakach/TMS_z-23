@@ -7,7 +7,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, EmailField
 from wtforms.validators import DataRequired, EqualTo, Length, Email
+from wtforms.widgets import TextArea
 
+from flask_ckeditor import CKEditor
+from flask_ckeditor import CKEditorField
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -17,6 +20,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initializing database
 db = SQLAlchemy(app)
+
+# Initializing CKEditor
+ckeditor = CKEditor(app)
 
 # Flask_login
 login_manager = LoginManager()
@@ -40,14 +46,21 @@ class SignUpForm(FlaskForm):
     password_hash_2 = PasswordField("Confirm Password", validators=[DataRequired()])
     agreement = BooleanField("I accept the privacy policy", validators=[DataRequired()])
     remember_me = BooleanField("Remember me")
-    submit = SubmitField('Submit')
+    submit = SubmitField('Sign up')
 
 
 class LoginForm(FlaskForm):
     """Create Login Form"""
     email = EmailField("Email", validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Sign in')
+
+
+class AddArticleForm(FlaskForm):
+    """Create form for adding articles"""
+    title = StringField("Title", validators=[DataRequired()])
+    content = StringField("Content", validators=[DataRequired()], widget=TextArea())
+    submit = SubmitField("Publish")
 ####################################################################################################
 
 
@@ -143,29 +156,32 @@ def profile():
     return render_template('profile.html')
 
 
-@app.route("/-", methods=['GET', 'POST'])
+@app.route("/add-article", methods=['GET', 'POST'])
+def add_article():
+    form = AddArticleForm()
 
-# def profile():
-#     form = UserForm()
-#     id = current_user.id
-#     name_to_update = User.query.get_or_404(id)
-#
-#     if request.method == "POST":
-#         name_to_update.name = request.form['name']
-#         name_to_update.email = request.form['email']
-#         name_to_update.username = request.form['username']
-#         try:
-#             db.session.commit()
-#             flash('User Updated Successfully')
-#             return render_template('profile.html',
-#                                    form=form, name_to_update=name_to_update, id=id)
-#         except:
-#             flash('Error!')
-#             return render_template('profile.html',
-#                                    form=form, name_to_update=name_to_update, id=id)
-#     else:
-#         return render_template('profile.html',
-#                                form=form, name_to_update=name_to_update, id=id)
+    if form.validate_on_submit():
+        poster = current_user.id
+        post = Posts(title=form.title.data, content=form.content.data, poster_id=poster)
+
+        db.session.add(post)
+        db.session.commit()
+
+        form.title.data = ''
+        form.content.data = ''
+
+        flash('Article have been successfully added!', category='success')
+
+    return render_template('add_article.html', form=form)
+
+
+@app.route("/article/<int:id>")
+def article(id):
+    """Creating full article page"""
+    post = Posts.query.get_or_404(id)
+    return render_template("post.html", post=post)
+
+
 
 #######################################################################################################################
 class Posts(db.Model):
@@ -178,6 +194,13 @@ class Posts(db.Model):
     # slug = db.Column(db.String(255))
     # Foreign key to Link users (refer to primary key of the user)
     poster_id = db.Column(db.Integer, db.ForeignKey('news_app_user.id'))
+
+
+@app.template_filter("datetimeformat")
+def datetimeformat(value, format="%d.%m.%Y %H:%M"):
+    """Changing date format in html doc using Jinja2"""
+    return value.strftime(format)
+# app.jinja_env.filters['datetimeformat'] = datetimeformat
 
 
 class Users(db.Model, UserMixin):

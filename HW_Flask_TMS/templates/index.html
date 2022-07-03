@@ -2,11 +2,20 @@
 
 {% block maincontent %}
     {{ super() }}
-    <p>Содержимое "главной страницы"</p>
 
+    <h1>All news</h1>
 
     {% for news in all_news_query %}
-        <p>{{ news }}</p>
+        <div class="shadow p-3 mt-3 bg-body rounded">
+
+            <h3>{{ news.title }}</h3>
+            <span>
+                <em>Posted by {{ news.poster.name }} on {{ news.date_posted|datetimeformat }}</em>
+            </span>
+            <br><br>
+            <p>{{ news.content|safe }}</p>
+
+        </div>
     {% endfor %}
 
 
