@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block maincontent %}
+    {{ super() }}
+
+    <h2>You searched for: {{ searched }}</h2>
+    <br>
+
+    {% if posts %}
+        {% for post in posts %}
+            <a href="{{ url_for('article', id=post.id) }}">{{ post.title }}</a><br>
+            <span>author: {{ post.author }}</span><br>
+            <span>content: "{{ post.content }}"</span>
+
+        {% endfor %}
+    {% else %}
+        <p>Sorry, your search term: <strong>{{ searched }}</strong> was not found...</p>
+    {% endif %}
+{% endblock %}

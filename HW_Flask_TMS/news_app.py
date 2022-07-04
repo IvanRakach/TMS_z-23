@@ -61,6 +61,11 @@ class AddArticleForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     content = StringField("Content", validators=[DataRequired()], widget=TextArea())
     submit = SubmitField("Publish")
+
+
+class SearchForm(FlaskForm):
+    searched = StringField("Searched", validators=[DataRequired()])  # searched as in html
+    submit = SubmitField("Submit")
 ####################################################################################################
 
 
@@ -249,6 +254,27 @@ def article_delete(id):
         all_news_query = Posts.query.order_by(Posts.date_posted)
         return render_template('index.html', all_news_query=all_news_query)
 
+
+@app.context_processor
+def layout():
+    """Stuff to header"""
+    form = SearchForm()
+    return dict(form=form)
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    """Creating search function"""
+    form = SearchForm()
+    posts = Posts.query
+
+    if form.validate_on_submit():
+        # Get data from submitted form
+        searched = form.searched.data
+        # Query the database
+        posts = posts.filter(Posts.content.like('%' + searched + '%'))
+        posts = posts.order_by(Posts.title).all()
+        return render_template('search.html', form=form, searched=searched, posts=posts)
 
 #######################################################################################################################
 class Posts(db.Model):
