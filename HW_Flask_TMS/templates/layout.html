@@ -18,7 +18,7 @@
                 <a href="{{ url_for('index') }}">WORLD NEWS</a>
             </div>
             <div class="small_icons mt-2">
-                <div>
+                <div class="search_block">
                     <form action="{{ url_for('search') }}"
                           class="d-flex" method="post">
                         {{ form.hidden_tag() }}
@@ -28,7 +28,8 @@
                     </form>
                 </div>
                 {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('profile') }}">{{ current_user.username }}</a>
+                    <a href="{{ url_for('profile') }}"
+                       class="profile_header">{{ current_user.username }}</a>
                 {% endif %}
             </div>
         </div>

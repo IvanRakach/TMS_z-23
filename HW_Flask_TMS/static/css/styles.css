@@ -31,7 +31,20 @@ header{
 .small_icons{
     text-align: center;
     width: 50%;
+    margin-left: 00%;
     float: left;
+    /*background-color: red;*/
+}
+.profile_header{
+    display: block;
+    width: 20%;
+    padding-right: 5%;
+    padding-top: 0.5%;
+    /*background-color: pink;*/
+}
+.search_block{
+    margin-left: 25%;
+    /*background-color: yellow;*/
 }
 .header_block_1_wrapper div a{
     color: #fff;
