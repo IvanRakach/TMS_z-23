@@ -10,13 +10,18 @@ from wtforms.validators import DataRequired, EqualTo, Length, Email
 from wtforms.widgets import TextArea
 
 from flask_ckeditor import CKEditor
-from flask_ckeditor import CKEditorField
+from flask_ckeditor import CKEditorField  # !!!
+
+from admin.admin import admin
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '1234567890qwerty'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///news_app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Adding Blueprint to main app
+app.register_blueprint(admin, url_prefix="/admin")
 
 # Initializing database
 db = SQLAlchemy(app)
@@ -28,6 +33,7 @@ ckeditor = CKEditor(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'sign_in'
+login_manager.login_message = 'Sign in for access to restricted pages'
 
 
 @login_manager.user_loader
