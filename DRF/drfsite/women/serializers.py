@@ -16,9 +16,12 @@ from .models import Women
 
 
 class WomenSerializer(serializers.ModelSerializer):
+    # данное поле позволит автоматом определять кто пользователь
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Women
-        fields = ("id", "title", "content", "cat")
+        fields = ("id", "title", "content", "cat", "user")
 
 # def encode():
 #     """

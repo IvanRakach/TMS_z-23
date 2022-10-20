@@ -17,14 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 # from women.views import WomenAPIView
-# from women.views import WomenAPIList, WomenAPIUpdate, WomenAPIDetailView
+from women.views import WomenAPIList, WomenAPIUpdate, WomenAPIDestroy
+# from women.views import WomenAPIDetailView
 from rest_framework import routers
 
-from women.views import WomenViewSet
+# from women.views import WomenViewSet
 
-router = routers.DefaultRouter()
-router.register(r'women', WomenViewSet, basename='women')
-print(router.urls)
+# router = routers.DefaultRouter()
+# router.register(r'women', WomenViewSet, basename='women')
+# print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,10 +36,16 @@ urlpatterns = [
     # path("api/v1/womenlist/<int:pk>/", WomenAPIUpdate.as_view()),
     # path("api/v1/womendetail/<int:pk>/", WomenAPIDetailView.as_view()),
 
+    # ---------------------------------------------------------------------------
     # маршурты ниже заменим роутером
     # роутер позволяет включать одной строкой набор стандартных маршрутов вместо
     # прописывания каждого отдельного url адреса
+
     # path("api/v1/womenlist", WomenViewSet.as_view({'get': 'list'})),
     # path("api/v1/womenlist/<int:pk>/", WomenViewSet.as_view({'put': 'update'})),
-    path("api/v1/", include(router.urls))  # http://127.0.0.1:8000/api/v1/women/
+    # path("api/v1/", include(router.urls))  # http://127.0.0.1:8000/api/v1/women/
+    # ---------------------------------------------------------------------------
+    path("api/v1/women/", WomenAPIList.as_view()),
+    path("api/v1/women/<int:pk>/", WomenAPIUpdate.as_view()),
+    path("api/v1/womendelete/<int:pk>/", WomenAPIDestroy.as_view()),
 ]
