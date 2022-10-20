@@ -1,5 +1,5 @@
 from django.forms import model_to_dict
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,22 +8,28 @@ from .models import Women
 from .serializers import WomenSerializer
 
 
-class WomenAPIList(generics.ListCreateAPIView):
-    """
-    Класс реализует 2 метода: GET + POST
-    """
-    queryset = Women.objects.all()  # список записей возвращаемых из БД по запросу клиента
-    serializer_class = WomenSerializer  # сериализатор, кот мы будем применять к нашему кверсету
-
-
-class WomenAPIUpdate(generics.UpdateAPIView):
+class WomenViewSet(viewsets.ModelViewSet):
     queryset = Women.objects.all()
     serializer_class = WomenSerializer
 
-class WomenAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Women.objects.all()
-    serializer_class = WomenSerializer
-
+# ----------------------------------------------------------------- #
+# Делаем замену нескольких классов представлений на 1 вьюсет
+# class WomenAPIList(generics.ListCreateAPIView):
+#     """
+#     Класс реализует 2 метода: GET + POST
+#     """
+#     queryset = Women.objects.all()  # список записей возвращаемых из БД по запросу клиента
+#     serializer_class = WomenSerializer  # сериализатор, кот мы будем применять к нашему кверсету
+#
+#
+# class WomenAPIUpdate(generics.UpdateAPIView):
+#     queryset = Women.objects.all()
+#     serializer_class = WomenSerializer
+#
+# class WomenAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Women.objects.all()
+#     serializer_class = WomenSerializer
+# ----------------------------------------------------------------- #
 
 # class WomenAPIView(generics.ListAPIView):
 #     queryset = Women.objects.all()

@@ -14,17 +14,30 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 # from women.views import WomenAPIView
-from women.views import WomenAPIList, WomenAPIUpdate, WomenAPIDetailView
+# from women.views import WomenAPIList, WomenAPIUpdate, WomenAPIDetailView
+from rest_framework import routers
+
+from women.views import WomenViewSet
+
+router = routers.SimpleRouter()
+router.register(r'women', WomenViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path("api/v1/womenlist", WomenAPIView.as_view()),
-    path("api/v1/womenlist", WomenAPIList.as_view()),
+    # path("api/v1/womenlist", WomenAPIList.as_view()),
     # path("api/v1/womenlist/<int:pk>/", WomenAPIView.as_view()),
     # path("api/v1/womenlist/<int:pk>/", WomenAPIList.as_view()),
-    path("api/v1/womenlist/<int:pk>/", WomenAPIUpdate.as_view()),
-    path("api/v1/womendetail/<int:pk>/", WomenAPIDetailView.as_view()),
+    # path("api/v1/womenlist/<int:pk>/", WomenAPIUpdate.as_view()),
+    # path("api/v1/womendetail/<int:pk>/", WomenAPIDetailView.as_view()),
+
+    # маршурты ниже заменим роутером
+    # роутер позволяет включать одной строкой набор стандартных маршрутов вместо
+    # прописывания каждого отдельного url адреса
+    # path("api/v1/womenlist", WomenViewSet.as_view({'get': 'list'})),
+    # path("api/v1/womenlist/<int:pk>/", WomenViewSet.as_view({'put': 'update'})),
+    path("api/v1/", include(router.urls))  # http://127.0.0.1:8000/api/v1/women/
 ]
