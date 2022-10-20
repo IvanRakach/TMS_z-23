@@ -22,6 +22,40 @@ class WomenSerializer(serializers.Serializer):
     is_published = serializers.BooleanField(default=True)
     cat_id = serializers.IntegerField()
 
+    def create(self, validated_data):
+        # обращаемся к интересующей модели через менеджер и метод создания и
+        # передаем словарь из ПРОВЕРЕННЫХ данных,
+        # который приходит от клиента через POST запрос
+        return Women.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        # instance - это ссылка на объект модели Women
+        # validated_data - это словарь из ПРОВЕРЕННЫХ данных,
+        # которые нужно изменить в БД
+        # -----
+        # обращаемся к полю объекта модели через instance.title
+        # обращаемся к данным клиента и берем их через ключ "title",
+        # а если мы не можем взять ключ "title", то возвращаем имеющиеся значения title
+        # такую процедуру делаем для всех полей модели кроме "time_create"
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.time_update = validated_data.get("time_update", instance.time_update)
+        instance.is_published = validated_data.get("is_published", instance.is_published)
+        instance.cat_id = validated_data.get("cat_id", instance.cat_id)
+        # когда мы просмотрели все данные мы можем сохранить все данные
+        instance.save()
+        return instance
+
+    def delete(self, instance, validated_data):
+        instance.title = validated_data.get("title", instance.title)
+        instance.content = validated_data.get("content", instance.content)
+        instance.time_update = validated_data.get("time_update", instance.time_update)
+        instance.is_published = validated_data.get("is_published", instance.is_published)
+        instance.cat_id = validated_data.get("cat_id", instance.cat_id)
+        # когда мы просмотрели все данные мы можем сохранить все данные
+        instance.delete()
+        return instance
+
 # def encode():
 #     """
 #     Преобразование объектов класса (модели) в JSON строку для передачи клиенту
