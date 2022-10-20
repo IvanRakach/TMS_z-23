@@ -25,16 +25,23 @@ class WomenAPIView (APIView):
         :param request:
         :return:
         """
-        lst = Women.objects.all().values()  # получаем не просто кверисет, а набор конкретных значений
-        return Response({"posts_from_DB": list(lst)})
+        # lst = Women.objects.all().values()  # получаем не просто кверисет, а набор конкретных значений
+        lst = Women.objects.all()
+        # return Response({"posts_from_DB": list(lst)})
+        # many=True - обработка не одной записи, а списка записей, Т.Е. получаем СПИСОК
+        # .data - СПИСОК преобразовываем в словарь
+        return Response({"posts_from_DB": WomenSerializer(lst, many=True).data})
 
     # def post(self, request):
     #     return Response({"title": "Jennifer"})
 
     def post(self, request):
+        serializer = WomenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         post_new = Women.objects.create(
             title=request.data["title"],
             content=request.data["content"],
             cat_id=request.data["cat_id"],
         )
-        return Response({"post": model_to_dict(post_new)})
+        return Response({"post": WomenSerializer(post_new).data})
