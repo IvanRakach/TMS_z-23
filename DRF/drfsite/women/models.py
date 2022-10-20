@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -8,6 +9,9 @@ class Women(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
     cat = models.ForeignKey("Category", on_delete=models.PROTECT, null=True)
+    # Поле "user" будет храть id пользователя, который добавл запись и
+    # она ддолжна быть связана с моделью "user" (где храняться все пользователи по умолчанию)
+    user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

@@ -131,5 +131,12 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',  # управление браузерным API
-    ]
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.AllowAny',
+            # IsAuthenticated - предоставление доступа только авторизованым пользователям
+            # + надо смотреть на то, какие методы уже переопределены в файле (модуле) permissions.py,
+            # т.е. на уровне отдельных представлений
+            # 'rest_framework.permissions.IsAuthenticated',
+        ]
 }

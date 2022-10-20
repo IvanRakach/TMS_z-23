@@ -2,45 +2,71 @@ from django.forms import model_to_dict
 from rest_framework import generics, viewsets
 from django.shortcuts import render
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Women, Category
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from .serializers import WomenSerializer
 
 
-class WomenViewSet(viewsets.ModelViewSet):
-    # queryset = Women.objects.all()
-    # данная строка не нужна, если есть переопределение метода +
-    # не забыть указать в файле urls.py "basename='women' "для роутера
+class WomenAPIList(generics.ListCreateAPIView):
+    queryset = Women.objects.all()
     serializer_class = WomenSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
-    def get_queryset(self):
-        """
-        Переопределяем метод.
-        queryset - должен возвращать список. Даже, если там 1 запись
-        :return:
-        """
-        pk = self.kwargs.get("pk")
-        if not pk:
-            return Women.objects.all()[:3]
-        return Women.objects.filter(pk=pk)
 
-    # с помощью декоратора "action" мы можем прописать новый маршрут,
-    # который не предусмотрен роутером, т.е. не стандартный маршрут
-    # нужно указать список поддерживаемых методов
-    # detail=False - значит, что нам нужно вернуть список (много записей)
-    # detail=True - вернуть 1 запись
-    @action(methods=["GET"], detail=False)
-    # сам метод должен возвращать JSON
-    def category(self, request, pk=None):
-        cats = Category.objects.all()
-        return Response({"cats": [cat.name for cat in cats]})
+class WomenAPIUpdate(generics.RetrieveUpdateAPIView):
+    queryset = Women.objects.all()
+    serializer_class = WomenSerializer
+    permission_classes = (IsOwnerOrReadOnly, )
 
-    # @action(methods=["GET"], detail=True)  # в URL pk прописывается ПЕРЕД, а не после "category"
-    # def category(self, request, pk=None):
-    #     cats = Category.objects.get(pk=pk)
-    #     return Response({"cats": cats.name})
+
+class WomenAPIDestroy(generics.RetrieveDestroyAPIView):
+    queryset = Women.objects.all()
+    serializer_class = WomenSerializer
+    # permission_classes = (IsAdminUser, )
+    permission_classes = (IsAdminOrReadOnly, )
+
+# ----------------------------------------------------------------- #
+# Убираем WomenViewSet и прописываем более детальный код для пермиссий
+# для большей детализации процесса
+#
+# class WomenViewSet(viewsets.ModelViewSet):
+#     # queryset = Women.objects.all()
+#     # данная строка не нужна, если есть переопределение метода +
+#     # не забыть указать в файле urls.py "basename='women' "для роутера
+#     serializer_class = WomenSerializer
+#
+#     def get_queryset(self):
+#         """
+#         Переопределяем метод.
+#         queryset - должен возвращать список. Даже, если там 1 запись
+#         :return:
+#         """
+#         pk = self.kwargs.get("pk")
+#         if not pk:
+#             return Women.objects.all()[:3]
+#         return Women.objects.filter(pk=pk)
+#
+#     # с помощью декоратора "action" мы можем прописать новый маршрут,
+#     # который не предусмотрен роутером, т.е. не стандартный маршрут
+#     # нужно указать список поддерживаемых методов
+#     # detail=False - значит, что нам нужно вернуть список (много записей)
+#     # detail=True - вернуть 1 запись
+#     @action(methods=["GET"], detail=False)
+#     # сам метод должен возвращать JSON
+#     def category(self, request, pk=None):
+#         cats = Category.objects.all()
+#         return Response({"cats": [cat.name for cat in cats]})
+#
+#     # @action(methods=["GET"], detail=True)  # в URL pk прописывается ПЕРЕД, а не после "category"
+#     # def category(self, request, pk=None):
+#     #     cats = Category.objects.get(pk=pk)
+#     #     return Response({"cats": cats.name})
+# ----------------------------------------------------------------- #
+
 
 # ----------------------------------------------------------------- #
 # Делаем замену нескольких классов представлений на 1 вьюсет
