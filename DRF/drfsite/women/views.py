@@ -8,6 +8,14 @@ from .models import Women
 from .serializers import WomenSerializer
 
 
+class WomenAPIList(generics.ListCreateAPIView):
+    """
+    Класс реализует 2 метода: GET + POST
+    """
+    queryset = Women.objects.all()  # список записей возвращаемых клиентом
+    serializer_class = WomenSerializer  # сериализатор, кот мы будем применять к нашему кверсету
+
+
 # class WomenAPIView(generics.ListAPIView):
 #     queryset = Women.objects.all()
 #     serializer_class = WomenSerializer  # передаем класс сериализатора
