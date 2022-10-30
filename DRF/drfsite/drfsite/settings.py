@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'women.apps.WomenConfig',
     'rest_framework',
+    'rest_framework.authtoken',  # использование стандартной таблицы по авторизации по токенам
+    'djoser',  # подключаем приложение djoser
 ]
 
 MIDDLEWARE = [
@@ -138,5 +140,10 @@ REST_FRAMEWORK = {
             # + надо смотреть на то, какие методы уже переопределены в файле (модуле) permissions.py,
             # т.е. на уровне отдельных представлений
             # 'rest_framework.permissions.IsAuthenticated',
-        ]
+        ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # разрешаем аутентификацию по токенам
+        'rest_framework.authentication.BasicAuthentication',  # разрешаем аутентификацию по сессиям
+        'rest_framework.authentication.SessionAuthentication',  # разрешаем аутентификацию по сессиям
+    ],
 }
