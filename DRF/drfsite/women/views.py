@@ -23,7 +23,7 @@ class WomenAPIUpdate(generics.RetrieveUpdateAPIView):
     serializer_class = WomenSerializer
     # permission_classes = (IsOwnerOrReadOnly, )
     permission_classes = (IsAuthenticated, )
-    authentication_classes = (TokenAuthentication, )
+    # authentication_classes = (TokenAuthentication, )
 
 
 class WomenAPIDestroy(generics.RetrieveDestroyAPIView):
