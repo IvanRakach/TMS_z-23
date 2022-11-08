@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load rest_framework %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% for prod in products %}
+    Category---{{ prod.category }}<br>
+    Brand---{{ prod.brand }}<br>
+    Name---{{ prod.name }}<br>
+    Description---{{ prod.description }}<br>
+    Param---{{ prod.param }}<br>
+<br>
+<br>
+<br>
+{% endfor %}
+
+</body>
+</html>

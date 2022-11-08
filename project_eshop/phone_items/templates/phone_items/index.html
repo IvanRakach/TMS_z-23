@@ -1,0 +1,81 @@
+{% extends 'phone_items/layout.html' %}
+{% load static %}
+
+
+{% block main_content %}
+
+
+
+<!-- слайдер -->
+<!-- Swiper -->
+<div class="swiper">
+    <div class="swiper-container mySwiper">
+        <div class="swiper-wrapper clearfix">
+            <div class="swiper-slide"><img src="{% static 'phone_items/img/slider_1.jpg' %}" alt="slider_1"></div>
+            <div class="swiper-slide"><img src="{% static 'phone_items/img/slider_2.jpg' %}" alt="slider_2"></div>
+            <div class="swiper-slide"><img src="{% static 'phone_items/img/slider_3.png' %}" alt="slider_3"></div>
+            <div class="swiper-slide"><img src="{% static 'phone_items/img/slider_4.png' %}" alt="slider_4"></div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</div>
+
+<!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- Initialize Swiper -->
+    <script>
+      var swiper = new Swiper(".mySwiper", {
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+    </script>
+
+
+
+<br>
+<br>
+<br>
+<div class="latest_products_block clearfix">
+    <div class="latest_products_block_header">
+        <p>Latest Products</p>
+        <p>The Purpose Of Lorem Ipsum</p>
+    </div>
+    <hr>
+    <div class="latest_products_block_products">
+        {% for el in latest_products %}
+        <article class="latest_products_block_product_card">
+            <div class="latest_products_block_product_card_img">
+                {% if el.product.image_1.url %}
+                    <img class="" src="{{ el.product.image_1.url }}" alt="{{ el.name }}">
+                {% else %}
+                    <img src="" alt="{{ el.name }}">
+                {% endif %}
+                <div class="latest_products_block_cart_block">
+                    <div class="latest_products_block_cart_block_btns first_btn">
+                        <a href="">
+                            <img src="{% static 'phone_items/img/like.jpg' %}"
+                             class="header-img" alt="shop-like" id="shop-like">
+                        </a>
+                    </div>
+                    <div class="latest_products_block_cart_block_btns">
+                        <a href="">
+                            <img src="{% static 'phone_items/img/cart.jpg' %}"
+                             class="header-img" alt="shop-cart" id="shop-cart">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="latest_products_block_product_card_params">
+                <p>{{ el.product.brand }}</p>
+                <p>{{ el.product.name }}</p>
+                <p>{{ el.price|floatformat:0 }} $</p>
+            </div>
+
+        </article>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

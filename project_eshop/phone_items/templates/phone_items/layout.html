@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% load static %}
+{% load rest_framework %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'phone_items/css/main.css' %}">
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <title>Title</title>
+</head>
+<body>
+    <header class="top-header">
+        <nav class="container">
+            <div class="sub-container-img">
+                <a href="{% url 'home' %}">
+                <img src="{% static 'phone_items/img/logo.jpg' %}" alt="shop-logo" id="shop-logo">
+            </a>
+            </div>
+
+                <div class="sub-container-header-menu">
+                    <ul class="header-menu-list">
+                        <li class="header-menu-list-first">
+                            <a href="{% url 'home' %}">
+                                <span class="header-menu-list-first-span">HOME</span>
+                            </a>
+                        </li>
+
+                        <li class="header-menu-list--link">
+                            <a href="{% url 'home' %}">
+                                CATEGORIES
+                            </a>
+                            <div class="container-header-menu-sub-list">
+                                <ul class="header-menu-sub-list">
+                                    <p class="header-menu-cat-name">FASHION</p>
+                                    <li class="header-menu-list--sub-link">
+                                        <a href="">
+                                            CASUAL T-SHORTS
+                                        </a>
+                                    </li>
+                                    <li class="header-menu-list--sub-link">
+                                        <a href="">
+                                            JEANS
+                                        </a>
+                                    </li>
+                                    <li class="header-menu-list--sub-link">
+                                        <a href="">
+                                            DRESSES
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="header-menu-sub-list">
+                                    <p class="header-menu-cat-name">ELECTRONICS</p>
+                                    <li class="header-menu-list--sub-link">
+                                        <a href="">
+                                            SMARTPHONES
+                                        </a>
+                                    </li>
+                                    <li class="header-menu-list--sub-link">
+                                        <a href="">
+                                            TV
+                                        </a>
+                                    </li>
+                                    <li class="header-menu-list--sub-link">
+                                        <a href="">
+                                            PC MONITORS
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>SHOP</li>
+                        <li>ABOUT</li>
+                        <li>ACCOUNT</li>
+                    </ul>
+
+                </div>
+            <div class="sub-container-header-menu-list-icons">
+                <ul class="header-menu-list-icons">
+                    <li>
+                        <a href="">
+                            <img src="{% static 'phone_items/img/search.jpg' %}"
+                             class="header-img" alt="shop-search" id="shop-search">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <img src="{% static 'phone_items/img/like.jpg' %}"
+                             class="header-img" alt="shop-like" id="shop-like">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <img src="{% static 'phone_items/img/cart.jpg' %}"
+                             class="header-img" alt="shop-cart" id="shop-cart">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="">
+                            <img src="{% static 'phone_items/img/profile.jpg' %}"
+                             class="header-img" alt="shop-profile" id="shop-profile">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+    </header>
+
+    <main>
+        {% block main_content %}
+        {% endblock %}
+    </main>
+
+    <footer class="m-footer">
+
+
+    </footer>
+
+</body>
+</html>
