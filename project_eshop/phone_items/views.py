@@ -13,8 +13,10 @@ from .serializers import BrandSerializer, ProductSerializer, ItemSerializer
 
 
 def index(request):
+    latest_products = Item.objects.order_by('-time_create')[:4]
     param_for_render = {
-        'title': 'Главная страница'
+        'title': 'Главная страница',
+        'latest_products': latest_products,
     }
     return render(request, 'phone_items/index.html', context=param_for_render)
 
@@ -48,7 +50,7 @@ class ProductAPIView(APIView):
     #     return response.redirect('profile-list')
 
 
-class ProductAPIView (APIView):
+class ProductAPIView(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'phone_items/products_list.html'
 
